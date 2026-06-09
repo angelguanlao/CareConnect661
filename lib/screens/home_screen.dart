@@ -37,23 +37,23 @@ class HomeScreen extends StatelessWidget {
     return AnimatedBuilder(
       animation: settings,
       builder: (context, _) {
-        return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              tooltip: 'Accessibility settings',
-              onPressed: () => _openAccessibilitySheet(context),
-              icon: const Icon(Icons.tune),
-            ),
-            title: const Text('CareConnect'),
-          ),
-          body: SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                if (constraints.maxWidth < 900) {
-                  return _PhoneShell(settings: settings);
-                }
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < 900) {
+              return _PhoneShell(settings: settings);
+            }
 
-                return Row(
+            return Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  tooltip: 'Accessibility settings',
+                  onPressed: () => _openAccessibilitySheet(context),
+                  icon: const Icon(Icons.tune),
+                ),
+                title: const Text('CareConnect'),
+              ),
+              body: SafeArea(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     SizedBox(
@@ -67,10 +67,10 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ],
-                );
-              },
-            ),
-          ),
+                ),
+              ),
+            );
+          },
         );
       },
     );
