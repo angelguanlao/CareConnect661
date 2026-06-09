@@ -1,4 +1,9 @@
 # Miscellaneous
+plan/
+*.iml
+.DS_Store
+.idea/
+.vscode/
 *.class
 *.lock
 *.log
