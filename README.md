@@ -37,6 +37,13 @@ screens for Week 4 implementation.
 - Confirmation
 - Validation errors
 
+## Architecture Choices
+
+- State management: `ChangeNotifier` via `AccessibilitySettings`, shared at app
+	level and listened to with `AnimatedBuilder`.
+- Navigation: Flutter named routes with `routes` + `onGenerateRoute`, including
+	typed argument passing for detail screens.
+
 ## Project Structure
 
 - `assets/icons/`
