@@ -19,6 +19,7 @@ class FormsScreen extends StatelessWidget {
     final isCompact = MediaQuery.sizeOf(context).width < 600;
     final horizontalPadding = isCompact ? 12.0 : 20.0;
     final verticalPadding = isCompact ? 12.0 : 20.0;
+    final forms = sampleForms;
 
     if (isCompact) {
       final compactContent = _PhoneFormEntryContent(
@@ -31,67 +32,114 @@ class FormsScreen extends StatelessWidget {
 
       return Scaffold(
         appBar: AppBar(title: const Text('Daily Care Log')),
-        body: compactContent,
+        body: RefreshIndicator(
+          semanticsLabel: 'Refresh daily care log',
+          onRefresh: () async {
+            await Future<void>.delayed(const Duration(milliseconds: 500));
+          },
+          child: compactContent,
+        ),
       );
     }
 
-    final content = ListView.separated(
-      padding: EdgeInsets.fromLTRB(
-        horizontalPadding,
-        verticalPadding,
-        horizontalPadding,
-        verticalPadding,
-      ),
-      itemCount: sampleForms.length + 1,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        if (index == sampleForms.length) {
-          return Card(
-            child: Padding(
-              padding: EdgeInsets.all(isCompact ? 14 : 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  FilledButton.icon(
-                    onPressed: () => Navigator.of(context)
-                        .pushNamed(AppRoutes.reviewApproval),
-                    icon: const Icon(Icons.fact_check_outlined),
-                    label: const Text('Review & Approve Draft'),
-                  ),
-                  const SizedBox(height: 8),
-                  OutlinedButton.icon(
-                    onPressed: () => Navigator.of(context)
-                        .pushNamed(AppRoutes.errorValidation),
-                    icon: const Icon(Icons.error_outline),
-                    label: const Text('View Validation Errors'),
-                  ),
-                ],
+    final listContent = forms.isEmpty
+        ? ListView(
+            padding: EdgeInsets.fromLTRB(
+              horizontalPadding,
+              verticalPadding,
+              horizontalPadding,
+              verticalPadding,
+            ),
+            children: const <Widget>[
+              _EmptyStateCard(
+                title: 'No forms in progress',
+                message:
+                    'Draft and submitted forms will appear here after your next visit.',
               ),
+            ],
+          )
+        : ListView.separated(
+            padding: EdgeInsets.fromLTRB(
+              horizontalPadding,
+              verticalPadding,
+              horizontalPadding,
+              verticalPadding,
             ),
-          );
-        }
+            itemCount: forms.length + 1,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              if (index == forms.length) {
+                return Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(isCompact ? 14 : 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Semantics(
+                          button: true,
+                          label: 'Open draft review and approval screen',
+                          child: FilledButton.icon(
+                            onPressed: () => Navigator.of(context)
+                                .pushNamed(AppRoutes.reviewApproval),
+                            icon: const Icon(Icons.fact_check_outlined),
+                            label: const Text('Review & Approve Draft'),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Semantics(
+                          button: true,
+                          label: 'Open form validation errors screen',
+                          child: OutlinedButton.icon(
+                            onPressed: () => Navigator.of(context)
+                                .pushNamed(AppRoutes.errorValidation),
+                            icon: const Icon(Icons.error_outline),
+                            label: const Text('View Validation Errors'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
 
-        final form = sampleForms[index];
+              final form = forms[index];
 
-        return Card(
-          child: Padding(
-            padding: EdgeInsets.all(isCompact ? 14 : 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  form.title,
-                  style: Theme.of(context).textTheme.titleMedium,
+              return Semantics(
+                label:
+                    '${form.title}. Progress ${(form.progress * 100).round()} percent.',
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(isCompact ? 14 : 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          form.title,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: 8),
+                        LinearProgressIndicator(
+                          value: form.progress,
+                          semanticsLabel: '${form.title} completion',
+                          semanticsValue:
+                              '${(form.progress * 100).round()} percent',
+                        ),
+                        const SizedBox(height: 8),
+                        Text(form.description),
+                      ],
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 8),
-                LinearProgressIndicator(value: form.progress),
-                const SizedBox(height: 8),
-                Text(form.description),
-              ],
-            ),
-          ),
-        );
+              );
+            },
+          );
+
+    final content = RefreshIndicator(
+      semanticsLabel: 'Refresh forms list',
+      onRefresh: () async {
+        await Future<void>.delayed(const Duration(milliseconds: 500));
       },
+      child: listContent,
     );
 
     if (!showAppBar) {
@@ -120,35 +168,38 @@ class _PhoneFormEntryContent extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 20),
       children: <Widget>[
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(14),
-            child: Row(
-              children: <Widget>[
-                const Icon(Icons.person_outline),
-                const SizedBox(width: 8),
-                const Expanded(
-                  child: Text(
-                    'Patient: Margaret Chen',
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade100,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(
-                    'Draft',
-                    style: TextStyle(
-                      color: Colors.blue.shade800,
-                      fontWeight: FontWeight.w700,
+        Semantics(
+          label: 'Current form patient Margaret Chen. Draft status.',
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: <Widget>[
+                  const Icon(Icons.person_outline),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Patient: Margaret Chen',
+                      style: TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
-                ),
-              ],
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade100,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      'Draft',
+                      style: TextStyle(
+                        color: Colors.blue.shade800,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -218,18 +269,26 @@ class _PhoneFormEntryContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        FilledButton.icon(
-          onPressed: () =>
-              Navigator.of(context).pushNamed(AppRoutes.reviewApproval),
-          icon: const Icon(Icons.save_outlined),
-          label: const Text('Save Draft'),
+        Semantics(
+          button: true,
+          label: 'Save form draft and open review screen',
+          child: FilledButton.icon(
+            onPressed: () =>
+                Navigator.of(context).pushNamed(AppRoutes.reviewApproval),
+            icon: const Icon(Icons.save_outlined),
+            label: const Text('Save Draft'),
+          ),
         ),
         const SizedBox(height: 8),
-        OutlinedButton.icon(
-          onPressed: () =>
-              Navigator.of(context).pushNamed(AppRoutes.errorValidation),
-          icon: const Icon(Icons.error_outline),
-          label: const Text('Check Validation'),
+        Semantics(
+          button: true,
+          label: 'Open validation checks',
+          child: OutlinedButton.icon(
+            onPressed: () =>
+                Navigator.of(context).pushNamed(AppRoutes.errorValidation),
+            icon: const Icon(Icons.error_outline),
+            label: const Text('Check Validation'),
+          ),
         ),
       ],
     );
@@ -342,16 +401,60 @@ class _ActivityTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: minHeight),
-        child: Card(
-          margin: EdgeInsets.zero,
-          child: CheckboxListTile(
-            dense: true,
-            value: checked,
-            onChanged: (_) {},
-            title: Text(label),
-            controlAffinity: ListTileControlAffinity.leading,
+      child: Semantics(
+        checked: checked,
+        label: '$label activity',
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: minHeight),
+          child: Card(
+            margin: EdgeInsets.zero,
+            child: CheckboxListTile(
+              dense: true,
+              value: checked,
+              onChanged: (_) {},
+              title: Text(label),
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyStateCard extends StatelessWidget {
+  const _EmptyStateCard({
+    required this.title,
+    required this.message,
+  });
+
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: '$title. $message',
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: <Widget>[
+              const Icon(Icons.assignment_late_outlined, size: 32),
+              const SizedBox(height: 10),
+              Text(
+                title,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
       ),
