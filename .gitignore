@@ -54,11 +54,14 @@ unlinked_spec.ds
 # Android related
 **/android/**/gradle-wrapper.jar
 .gradle/
+android/.gradle/
 **/android/captures/
 **/android/gradlew
 **/android/gradlew.bat
 **/android/local.properties
+android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+android/.cxx/
 **/android/key.properties
 *.jks
 
