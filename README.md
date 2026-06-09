@@ -1,21 +1,29 @@
 # CareConnect661
 
-CareConnect661 is a minimal Flutter frontend scaffold focused on left-hand
-accessibility, reachability, and motor-friendly UI patterns. It provides a lightweight foundation for rapid prototyping while maintaingn a clean, modular structure suitable for scaliing into a full application.
+CareConnect661 is a Flutter prototype for left-hand optimized and motor-friendly
+mobile care workflows. The app is aligned to a Figma redesign and includes
+phone-focused navigation, accessibility controls, and route-based workflow
+screens for Week 4 implementation.
 
-## Project Purpose
-This project serves as starting point for building mobile interfaces optimized for:
+## Current Feature Set
 
-- left-hand dominant users
-- users with limited thumb mobility
-- users who benefit from larger touch targets
-- high-contrast, low-clutter UI layouts
-- adjustable text scaling and readability imnprovements
+- Phone shell with bottom navigation and left-side floating action button
+- Accessibility settings (left-hand mode, high contrast, larger touch targets,
+	text scaling)
+- Core workflow screens:
+	- Home dashboard
+	- Patients list and patient detail
+	- Visits list and visit detail
+	- Forms list
+	- Settings
+	- Navigation menu
+	- Review and approval
+	- Confirmation
+	- Validation error state
+- Named routes with detail-screen argument passing
+- Unit and widget tests for core flows
 
-The goal is to demonstrate how thoughtful UI placement and adaptive design can reduce fricton and improve daily usability for people with accesibility needs.
-
-
-## Included structure
+## Project Structure
 
 - `assets/icons/`
 - `assets/images/`
@@ -28,42 +36,87 @@ The goal is to demonstrate how thoughtful UI placement and adaptive design can r
 - `test/unit/`
 - `test/widget/`
 
-## Accessibility focus
+## Requirements
 
-CareConnect661 includes early-stage accessibility considerations:
+- Flutter SDK (stable channel)
+- Dart SDK (bundled with Flutter)
+- Android Studio (for Android emulator)
 
-Left-edge primary controls  
-Ensures the most frequently used actions are reachable by the left thumb without stretching.
+Verify toolchain:
 
-Larger touch targets  
-Buttons and interactive elements meet or exceed the recommended 48×48 dp minimum.
+```bash
+flutter doctor
+```
 
-High-contrast theme support  
-Improves visibility for users with low vision or visual fatigue.
+## Setup
 
-Adjustable text scaling  
-Typography responds cleanly to system-level text size changes without breaking layout.
+1. Install dependencies:
 
-Reduced cognitive load  
-Simple navigation, predictable placement, and minimal visual noise.
+```bash
+flutter pub get
+```
 
-These principles guide all UI decisions in the scaffold.
+2. Confirm devices/emulators:
 
-## Tech Stack
-- Flutter
-- Dart
-- Figma
+```bash
+flutter devices
+flutter emulators
+```
 
-## Roadmap
+3. If needed, launch emulator:
 
-Add left‑hand‑optimized navigation rail
+```bash
+flutter emulators --launch Pixel_10
+```
 
-Introduce customizable reachability zones
+## Run
 
-Add voice‑assisted input for motor‑limited users
+Run on Android emulator:
 
-Implement onboarding for accessibility preferences
+```bash
+flutter run -d emulator-5554
+```
 
-Add sample screens demonstrating ergonomic layouts
+Run on any available device:
 
-Expand widget library with adaptive components
+```bash
+flutter run
+```
+
+## Test
+
+Run targeted suite used during implementation:
+
+```bash
+flutter test test/unit/handedness_layout_test.dart \
+	test/unit/care_models_test.dart \
+	test/widget_tests.dart \
+	test/widget/left_hand_accessibility_test.dart
+```
+
+Run all tests:
+
+```bash
+flutter test
+```
+
+Collect coverage:
+
+```bash
+flutter test --coverage
+```
+
+## Accessibility Notes
+
+- Primary actions are designed for left-thumb reach on phone layouts
+- Touch target sizing scales with accessibility settings
+- High-contrast mode is supported in app theme
+- Text scale is wired through app-level `MediaQuery` `TextScaler`
+
+## Design Reference
+
+Figma redesign code export is included under:
+
+- `plan/CareConnect Accessibility Redesign/`
+
+Use this folder as the visual reference when continuing screen-alignment work.
