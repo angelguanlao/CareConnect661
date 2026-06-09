@@ -15,70 +15,72 @@ class AccessibilityPanel extends StatelessWidget {
     final theme = Theme.of(context);
     final minTileHeight = settings.largerTouchTargets ? 76.0 : 64.0;
 
-    return Container(
+    return SingleChildScrollView(
       key: const Key('accessibility-panel'),
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.colorScheme.outlineVariant),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Accessibility',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w700,
+      child: Container(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: theme.colorScheme.outlineVariant),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Accessibility',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Core controls stay within easy thumb reach.',
-            style: theme.textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 20),
-          _PanelToggle(
-            title: 'Left-hand mode',
-            subtitle: 'Anchor menus and actions on the left edge.',
-            value: settings.leftHandMode,
-            icon: Icons.back_hand_outlined,
-            minHeight: minTileHeight,
-            onChanged: settings.toggleLeftHandMode,
-          ),
-          _PanelToggle(
-            title: 'High contrast',
-            subtitle: 'Increase separation between text and surfaces.',
-            value: settings.highContrast,
-            icon: Icons.contrast,
-            minHeight: minTileHeight,
-            onChanged: settings.toggleHighContrast,
-          ),
-          _PanelToggle(
-            title: 'Larger touch targets',
-            subtitle: 'Give key actions more room for reliable taps.',
-            value: settings.largerTouchTargets,
-            icon: Icons.touch_app_outlined,
-            minHeight: minTileHeight,
-            onChanged: settings.toggleLargerTouchTargets,
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Text size',
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w700,
+            const SizedBox(height: 8),
+            Text(
+              'Core controls stay within easy thumb reach.',
+              style: theme.textTheme.bodyMedium,
             ),
-          ),
-          Slider(
-            value: settings.textScale,
-            min: 1.0,
-            max: 1.4,
-            divisions: 4,
-            label: '${(settings.textScale * 100).round()}%',
-            onChanged: settings.setTextScale,
-          ),
-        ],
+            const SizedBox(height: 20),
+            _PanelToggle(
+              title: 'Left-hand mode',
+              subtitle: 'Anchor menus and actions on the left edge.',
+              value: settings.leftHandMode,
+              icon: Icons.back_hand_outlined,
+              minHeight: minTileHeight,
+              onChanged: settings.toggleLeftHandMode,
+            ),
+            _PanelToggle(
+              title: 'High contrast',
+              subtitle: 'Increase separation between text and surfaces.',
+              value: settings.highContrast,
+              icon: Icons.contrast,
+              minHeight: minTileHeight,
+              onChanged: settings.toggleHighContrast,
+            ),
+            _PanelToggle(
+              title: 'Larger touch targets',
+              subtitle: 'Give key actions more room for reliable taps.',
+              value: settings.largerTouchTargets,
+              icon: Icons.touch_app_outlined,
+              minHeight: minTileHeight,
+              onChanged: settings.toggleLargerTouchTargets,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Text size',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Slider(
+              value: settings.textScale,
+              min: 1.0,
+              max: 1.4,
+              divisions: 4,
+              label: '${(settings.textScale * 100).round()}%',
+              onChanged: settings.setTextScale,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -106,20 +108,22 @@ class _PanelToggle extends StatelessWidget {
     return Semantics(
       toggled: value,
       label: title,
-      child: Container(
-        constraints: BoxConstraints(minHeight: minHeight),
+      child: Card(
         margin: const EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18),
         ),
-        child: SwitchListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          value: value,
-          onChanged: onChanged,
-          secondary: Icon(icon),
-          title: Text(title),
-          subtitle: Text(subtitle),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: minHeight),
+          child: SwitchListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            value: value,
+            onChanged: onChanged,
+            secondary: Icon(icon),
+            title: Text(title),
+            subtitle: Text(subtitle),
+          ),
         ),
       ),
     );

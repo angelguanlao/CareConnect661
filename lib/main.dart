@@ -28,6 +28,8 @@ class _CareConnectAppState extends State<CareConnectApp> {
           title: 'CareConnect661',
           theme: AppTheme.light(highContrast: _settings.highContrast),
           routes: AppRoutes.build(_settings),
+          onGenerateRoute: (routeSettings) =>
+              AppRoutes.onGenerateRoute(routeSettings, _settings),
           builder: (context, child) {
             final mediaQuery = MediaQuery.of(context);
 
