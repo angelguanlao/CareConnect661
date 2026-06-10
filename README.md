@@ -85,6 +85,18 @@ Run on default device:
 flutter run
 ```
 
+## Demo Login
+
+This prototype uses demo authentication logic (no backend service).
+
+- Email: any non-empty value
+- Password: at least 6 characters
+
+Example:
+
+- Email: `demo@careconnect.com`
+- Password: `123456`
+
 ## Test
 
 Run all tests:
