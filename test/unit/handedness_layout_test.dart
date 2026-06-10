@@ -1,27 +1,46 @@
-import 'package:careconnect661/utils/handedness_layout.dart';
+import 'package:care_connect661/utils/handedness_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('left-hand mode keeps primary actions on the left edge', () {
+  test('left-hand mode keeps primary action alignment on the left edge', () {
     expect(
-      HandednessLayout.quickActionAlignment(true),
-      Alignment.bottomLeft,
+      HandednessLayout.primaryButtonAlignment(true),
+      Alignment.centerLeft,
     );
     expect(
-      HandednessLayout.quickActionAlignment(false),
-      Alignment.bottomRight,
+      HandednessLayout.primaryButtonAlignment(false),
+      Alignment.centerRight,
     );
   });
 
-  test('left-hand mode applies heavier left-side content padding', () {
+  test('fab location follows handedness preference', () {
     expect(
-      HandednessLayout.contentPadding(true),
-      const EdgeInsets.fromLTRB(24, 24, 16, 24),
+      HandednessLayout.fabLocation(true),
+      FloatingActionButtonLocation.startFloat,
     );
     expect(
-      HandednessLayout.contentPadding(false),
-      const EdgeInsets.fromLTRB(16, 24, 24, 24),
+      HandednessLayout.fabLocation(false),
+      FloatingActionButtonLocation.endFloat,
+    );
+  });
+
+  test('comfort zone and reachability zone behave as expected', () {
+    expect(
+      HandednessLayout.isInComfortZone(0.5, leftHandMode: true),
+      isTrue,
+    );
+    expect(
+      HandednessLayout.isInComfortZone(0.8, leftHandMode: true),
+      isFalse,
+    );
+    expect(
+      HandednessLayout.zoneFor(0.2, leftHandMode: true),
+      ReachabilityZone.easy,
+    );
+    expect(
+      HandednessLayout.zoneFor(0.8, leftHandMode: true),
+      ReachabilityZone.avoid,
     );
   });
 }
