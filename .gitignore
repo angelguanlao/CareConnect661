@@ -110,7 +110,7 @@ android/.cxx/
 **/linux/flutter/generated_plugins.cmake
 
 # Coverage
-coverage/
+# Assignment requires committing coverage artifacts.
 
 # Symbols
 app.*.symbols
