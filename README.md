@@ -65,10 +65,10 @@ flutter devices
 flutter emulators
 ```
 
-4. Launch emulator if needed:
+4. Launch emulator if needed (replace with one from `flutter emulators` output):
 
 ```bash
-flutter emulators --launch Pixel_10
+flutter emulators --launch <emulator_id>
 ```
 
 ## Run
