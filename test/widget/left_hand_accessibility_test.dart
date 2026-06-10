@@ -1,30 +1,58 @@
-import 'package:careconnect661/screens/home_screen.dart';
-import 'package:careconnect661/state/accessibility_settings.dart';
+import 'package:care_connect661/main.dart';
+import 'package:care_connect661/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  testWidgets('accessibility panel renders to the left of the main content on wide layouts',
+  testWidgets('onboarding completion reaches home and shell navigation works',
       (tester) async {
-    tester.view.physicalSize = const Size(1400, 1000);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-
-    final settings = AccessibilitySettings();
+    final appState = AppState();
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: HomeScreen(settings: settings),
+      ChangeNotifierProvider.value(
+        value: appState,
+        child: CareConnectApp(appState: appState),
       ),
     );
+    await tester.pumpAndSettle();
 
-    expect(find.text('Left-hand accessibility'), findsOneWidget);
-    expect(find.text('Left-hand mode'), findsOneWidget);
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Email address'),
+      'demo@careconnect.com',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Password'),
+      '123456',
+    );
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Sign In'));
+    await tester.pump(const Duration(milliseconds: 900));
+    await tester.pumpAndSettle();
 
-    final panelLeft = tester.getTopLeft(find.byKey(const Key('accessibility-panel')));
-    final contentLeft = tester.getTopLeft(find.byKey(const Key('home-content')));
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Get Started'));
+    await tester.pumpAndSettle();
 
-    expect(panelLeft.dx, lessThan(contentLeft.dx));
+    expect(find.text('Quick Actions'), findsOneWidget);
+    expect(find.widgetWithText(NavigationDestination, 'Home'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Explore accessibility features'),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.widgetWithText(NavigationDestination, 'Features'));
+    await tester.pumpAndSettle();
+    expect(find.text('Accessibility Features'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(NavigationDestination, 'Settings'));
+    await tester.pumpAndSettle();
+    expect(find.text('Settings'), findsAtLeastNWidgets(1));
+
+    await tester.tap(find.text('High Contrast Mode'));
+    await tester.pumpAndSettle();
+    expect(appState.highContrast, isTrue);
   });
 }
