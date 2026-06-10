@@ -8,7 +8,7 @@ abstract final class AppRoutes {
 
   static Map<String, WidgetBuilder> build(AccessibilitySettings settings) {
     return <String, WidgetBuilder>{
-      home: (_) => HomeScreen(settings: settings),
+      home: (_) => HomeScreen(),
     };
   }
 }

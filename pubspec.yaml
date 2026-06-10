@@ -1,20 +1,28 @@
-name: careconnect661
-description: Accessibility-first Flutter frontend scaffold for CareConnect661.
+name: care_connect661
+description: CareConnect — left-hand accessibility focused mobile application.
 publish_to: 'none'
-
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.4.0
+  sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  go_router: ^17.3.0
+  provider: ^6.1.2
+  cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true
+  # assets/icons/ and assets/images/ exist in the repo but contain no files
+  # used by this code — only built-in Material Icons are referenced.
+  # Re-add this block once you place actual image files in those directories:
+  # assets:
+  #   - assets/icons/
+  #   - assets/images/
