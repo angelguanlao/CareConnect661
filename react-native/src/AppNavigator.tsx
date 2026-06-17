@@ -78,3 +78,5 @@ export function AppNavigator() {
     </NavigationContainer>
   );
 }
+
+export default AppNavigator;

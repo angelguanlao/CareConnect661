@@ -1,6 +1,6 @@
 import React from 'react';
 import {AppProvider} from './src/state/AppContext';
-import {AppNavigator} from './src/AppNavigator';
+import AppNavigator from './src/AppNavigator';
 
 function App(): React.JSX.Element {
   return (
