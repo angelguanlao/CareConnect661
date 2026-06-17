@@ -137,9 +137,18 @@ class AppStore {
     return this.state.notifications.filter(n => !n.isRead).length;
   }
 
-  updateProfile(name: string, email: string) {
+  updateProfile(name: string, email: string, bloodGroup?: string, allergies?: string) {
     if (this.state.currentUser) {
-      this.state = {...this.state, currentUser: {...this.state.currentUser, name, email}};
+      this.state = {
+        ...this.state,
+        currentUser: {
+          ...this.state.currentUser,
+          name,
+          email,
+          bloodGroup: bloodGroup || this.state.currentUser.bloodGroup,
+          allergies: allergies || this.state.currentUser.allergies,
+        },
+      };
       this.notify();
     }
   }

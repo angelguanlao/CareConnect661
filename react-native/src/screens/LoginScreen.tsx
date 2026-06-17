@@ -1,6 +1,15 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator, AccessibilityInfo} from 'react-native';
-import {Colors, Spacing, Typography, Radius, MIN_TOUCH} from '../theme/Theme';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  AccessibilityInfo,
+} from 'react-native';
+import {AppTheme} from '../theme/Theme';
 import {appStore} from '../state/AppState';
 
 export function LoginScreen() {
@@ -8,122 +17,240 @@ export function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
+  const [obscure, setObscure] = useState(true);
 
   const handleLogin = async () => {
     setError(null);
+    if (!email.includes('@') || !email.includes('.')) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters.');
+      return;
+    }
     setLoading(true);
-    const ok = await appStore.login(email, password);
-    setLoading(false);
+    const ok = await appStore.login(email.trim(), password);
     if (!ok) {
-      const msg = 'Incorrect email or password. Please try again.';
-      setError(msg);
-      AccessibilityInfo.announceForAccessibility(msg);
+      setLoading(false);
+      setError('Incorrect email or password. Please try again.');
+      AccessibilityInfo.announceForAccessibility(
+        'Incorrect email or password. Please try again.'
+      );
+      return;
     }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-      <View accessible accessibilityRole="header" style={styles.header}>
-        <View style={styles.logoBox} accessibilityLabel="CareConnect logo">
-          <Text style={styles.logoIcon}>♿</Text>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{padding: 24}}
+      keyboardShouldPersistTaps="handled">
+      {/* Brand Header */}
+      <View style={styles.brandRow}>
+        <View style={styles.brandIcon}>
+          <Text style={styles.brandIconText}>♿</Text>
         </View>
-        <Text style={styles.brand}>CareConnect</Text>
+        <Text style={styles.brandTitle}>CareConnect</Text>
       </View>
 
       <Text style={styles.welcome}>Welcome back</Text>
       <Text style={styles.subtitle}>Sign in to continue</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email address"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        accessibilityLabel="Email address"
-        accessibilityHint="Enter your email address"
-        testID="email-input"
-      />
-      <View style={styles.passwordRow}>
+      {/* Email Field */}
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Email address</Text>
         <TextInput
-          style={[styles.input, {flex: 1}]}
-          placeholder="Password (6+ characters)"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!showPassword}
-          accessibilityLabel="Password"
-          accessibilityHint="Enter your password, at least 6 characters"
-          testID="password-input"
+          accessibilityLabel="Email address text field"
+          style={styles.input}
+          placeholder="you@example.com"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
+          testID="email-input"
         />
-        <TouchableOpacity
-          onPress={() => setShowPassword(v => !v)}
-          style={styles.visibilityBtn}
-          accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
-          testID="toggle-password">
-          <Text>{showPassword ? '🙈' : '👁'}</Text>
-        </TouchableOpacity>
       </View>
 
+      {/* Password Field */}
+      <View style={styles.fieldContainer}>
+        <Text style={styles.label}>Password</Text>
+        <View style={styles.passwordRow}>
+          <TextInput
+            accessibilityLabel="Password text field"
+            style={[styles.input, {flex: 1}]}
+            placeholder="At least 6 characters"
+            secureTextEntry={obscure}
+            value={password}
+            onChangeText={setPassword}
+            onSubmitEditing={handleLogin}
+            testID="password-input"
+          />
+          <TouchableOpacity
+            accessibilityLabel={obscure ? 'Show password' : 'Hide password'}
+            onPress={() => setObscure(!obscure)}
+            style={styles.eyeButton}
+            testID="toggle-password">
+            <Text style={{fontSize: 16}}>
+              {obscure ? '👁️' : '🙈'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Error Message */}
       {error && (
-        <View
-          style={styles.errorBox}
-          accessible
-          accessibilityLiveRegion="polite"
-          accessibilityLabel={error}
-          testID="error-message">
+        <View style={styles.errorBox} accessibilityLiveRegion="polite" testID="error-message">
           <Text style={styles.errorText}>{error}</Text>
         </View>
       )}
 
+      {/* Sign In Button */}
       <TouchableOpacity
-        style={styles.button}
+        accessibilityLabel="Sign in to CareConnect"
+        style={styles.signInButton}
         onPress={handleLogin}
         disabled={loading}
-        accessibilityLabel="Sign in to CareConnect"
-        accessibilityRole="button"
         testID="sign-in-button">
         {loading ? (
-          <ActivityIndicator color="#fff" />
+          <ActivityIndicator color="#FFF" />
         ) : (
-          <Text style={styles.buttonText}>Sign In</Text>
+          <Text style={styles.signInText}>Sign In</Text>
         )}
       </TouchableOpacity>
 
+      {/* Sign Up Button */}
       <TouchableOpacity
-        style={styles.signupBtn}
+        accessibilityLabel="Create account"
+        style={styles.signUpButton}
         onPress={() => {
           const msg = 'Sign-up feature coming soon! For now, use any email + password ≥ 6 characters to demo the app.';
           AccessibilityInfo.announceForAccessibility(msg);
           alert(msg);
         }}
-        accessibilityLabel="Create account"
-        accessibilityRole="button"
         testID="sign-up-button">
-        <Text style={styles.signupBtnText}>Create Account</Text>
+        <Text style={styles.signUpText}>Create Account</Text>
       </TouchableOpacity>
 
-      <Text style={styles.hint}>Demo: any email + password ≥ 6 characters</Text>
+      <Text style={styles.demoNote}>
+        Demo: any email + password ≥ 6 characters
+      </Text>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {padding: Spacing.lg, paddingTop: Spacing.xl * 2},
-  header: {flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.xl},
-  logoBox: {width: 52, height: 52, backgroundColor: Colors.primary, borderRadius: Radius.md, justifyContent: 'center', alignItems: 'center'},
-  logoIcon: {fontSize: 28, color: '#fff'},
-  brand: {...Typography.headlineMedium, color: Colors.primary, fontWeight: '700', marginLeft: Spacing.md},
-  welcome: {...Typography.headlineSmall, fontWeight: '700', marginBottom: Spacing.xs},
-  subtitle: {...Typography.bodyLarge, color: Colors.onSurfaceVariant, marginBottom: Spacing.lg},
-  input: {borderWidth: 1, borderColor: '#BDBDBD', borderRadius: Radius.md, padding: Spacing.md, marginBottom: Spacing.md, ...Typography.bodyLarge, backgroundColor: Colors.surface, minHeight: MIN_TOUCH},
-  passwordRow: {flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.md},
-  visibilityBtn: {padding: Spacing.md, minWidth: MIN_TOUCH, minHeight: MIN_TOUCH, justifyContent: 'center', alignItems: 'center'},
-  errorBox: {backgroundColor: Colors.errorContainer, borderRadius: Radius.sm, padding: Spacing.md, marginBottom: Spacing.md},
-  errorText: {color: Colors.error, ...Typography.bodyMedium},
-  button: {backgroundColor: Colors.primary, borderRadius: Radius.md, padding: Spacing.md, alignItems: 'center', minHeight: MIN_TOUCH, marginBottom: Spacing.md},
-  buttonText: {color: '#fff', ...Typography.titleMedium},
-  signupBtn: {borderWidth: 2, borderColor: Colors.primary, borderRadius: Radius.md, padding: Spacing.md, alignItems: 'center', minHeight: MIN_TOUCH, marginBottom: Spacing.md},
-  signupBtnText: {color: Colors.primary, ...Typography.labelLarge},
-  hint: {textAlign: 'center', color: Colors.onSurfaceVariant, ...Typography.bodyMedium},
+  container: {
+    backgroundColor: AppTheme.background,
+  },
+
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 24,
+    marginBottom: 40,
+  },
+  brandIcon: {
+    width: 52,
+    height: 52,
+    backgroundColor: AppTheme.primary,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  brandIconText: {
+    color: '#FFF',
+    fontSize: 28,
+  },
+  brandTitle: {
+    marginLeft: 12,
+    fontSize: 28,
+    fontWeight: '700',
+    color: AppTheme.primary,
+  },
+
+  welcome: {
+    fontSize: 24,
+    fontWeight: '700',
+  },
+  subtitle: {
+    marginTop: 6,
+    fontSize: 16,
+    color: AppTheme.textSecondary,
+    marginBottom: 32,
+  },
+
+  fieldContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 14,
+    marginBottom: 6,
+    fontWeight: '600',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: AppTheme.border,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 16,
+  },
+
+  passwordRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  eyeButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+
+  errorBox: {
+    backgroundColor: '#FFEBEE',
+    borderColor: '#D32F2F',
+    borderWidth: 1,
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  errorText: {
+    color: '#D32F2F',
+    fontSize: 14,
+  },
+
+  signInButton: {
+    backgroundColor: AppTheme.primary,
+    paddingVertical: 16,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 12,
+  },
+  signInText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+
+  signUpButton: {
+    borderWidth: 2,
+    borderColor: AppTheme.primary,
+    paddingVertical: 16,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  signUpText: {
+    color: AppTheme.primary,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+
+  demoNote: {
+    marginTop: 20,
+    textAlign: 'center',
+    color: AppTheme.textSecondary,
+    fontSize: 14,
+  },
 });
