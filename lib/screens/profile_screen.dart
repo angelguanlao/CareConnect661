@@ -72,6 +72,76 @@ class ProfileScreen extends StatelessWidget {
                     ?.copyWith(color: AppTheme.textSecondary)),
             const SizedBox(height: 28),
 
+            // ── Health Information ─────────────────────────────────────────
+            if (user.bloodGroup != null || user.allergies != null)
+              Card(
+                color: theme.colorScheme.surface,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Health Information',
+                          style: theme.textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 12),
+                      if (user.bloodGroup != null) ...[
+                        Row(
+                          children: [
+                            Icon(Icons.bloodtype_rounded,
+                                color: AppTheme.primary, size: 20),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Blood Group',
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                              color: AppTheme.textSecondary)),
+                                  Text(user.bloodGroup!,
+                                      style: theme.textTheme.titleSmall
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                      if (user.bloodGroup != null && user.allergies != null)
+                        const SizedBox(height: 16),
+                      if (user.allergies != null) ...[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(Icons.warning_rounded,
+                                color: theme.colorScheme.error, size: 20),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Allergies',
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                              color: AppTheme.textSecondary)),
+                                  Text(user.allergies!,
+                                      style: theme.textTheme.titleSmall
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            const SizedBox(height: 28),
+
             // ── Stats ──────────────────────────────────────────────────
             Card(
               child: Padding(

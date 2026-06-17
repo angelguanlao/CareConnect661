@@ -90,6 +90,19 @@ export function LoginScreen() {
         )}
       </TouchableOpacity>
 
+      <TouchableOpacity
+        style={styles.signupBtn}
+        onPress={() => {
+          const msg = 'Sign-up feature coming soon! For now, use any email + password ≥ 6 characters to demo the app.';
+          AccessibilityInfo.announceForAccessibility(msg);
+          alert(msg);
+        }}
+        accessibilityLabel="Create account"
+        accessibilityRole="button"
+        testID="sign-up-button">
+        <Text style={styles.signupBtnText}>Create Account</Text>
+      </TouchableOpacity>
+
       <Text style={styles.hint}>Demo: any email + password ≥ 6 characters</Text>
     </ScrollView>
   );
@@ -110,5 +123,7 @@ const styles = StyleSheet.create({
   errorText: {color: Colors.error, ...Typography.bodyMedium},
   button: {backgroundColor: Colors.primary, borderRadius: Radius.md, padding: Spacing.md, alignItems: 'center', minHeight: MIN_TOUCH, marginBottom: Spacing.md},
   buttonText: {color: '#fff', ...Typography.titleMedium},
+  signupBtn: {borderWidth: 2, borderColor: Colors.primary, borderRadius: Radius.md, padding: Spacing.md, alignItems: 'center', minHeight: MIN_TOUCH, marginBottom: Spacing.md},
+  signupBtnText: {color: Colors.primary, ...Typography.labelLarge},
   hint: {textAlign: 'center', color: Colors.onSurfaceVariant, ...Typography.bodyMedium},
 });

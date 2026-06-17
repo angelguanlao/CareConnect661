@@ -3,6 +3,8 @@ export interface User {
   name: string;
   email: string;
   joinDate: Date;
+  bloodGroup?: string;
+  allergies?: string;
 }
 
 export interface Notification {
@@ -67,6 +69,8 @@ class AppStore {
           name: 'Alex Johnson',
           email: email.trim(),
           joinDate: new Date(2024, 0, 15),
+          bloodGroup: 'B+',
+          allergies: 'Penicillin, seafood',
         },
         notifications: [
           {id: '1', title: 'Accessibility Tip', body: 'Try enabling high-contrast mode for better visibility.', timestamp: new Date(Date.now() - 3600000), isRead: false},

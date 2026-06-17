@@ -27,6 +27,31 @@ export function ProfileScreen() {
       <Text style={styles.email}>{user?.email}</Text>
       <Text style={styles.member}>Member since {user?.joinDate.getFullYear()}</Text>
 
+      {(user?.bloodGroup || user?.allergies) && (
+        <View style={styles.healthCard}>
+          <Text style={styles.healthTitle}>Health Information</Text>
+          {user?.bloodGroup && (
+            <View style={styles.healthRow}>
+              <Text style={styles.healthIcon}>🩸</Text>
+              <View style={styles.healthContent}>
+                <Text style={styles.healthLabel}>Blood Group</Text>
+                <Text style={styles.healthValue}>{user.bloodGroup}</Text>
+              </View>
+            </View>
+          )}
+          {user?.bloodGroup && user?.allergies && <View style={styles.healthDivider} />}
+          {user?.allergies && (
+            <View style={styles.healthRow}>
+              <Text style={styles.healthIcon}>⚠️</Text>
+              <View style={styles.healthContent}>
+                <Text style={styles.healthLabel}>Allergies</Text>
+                <Text style={styles.healthValue}>{user.allergies}</Text>
+              </View>
+            </View>
+          )}
+        </View>
+      )}
+
       <View style={styles.statsCard}>
         <View style={styles.stat} accessibilityLabel={`Features Active: ${state.enabledFeatures.size}`}>
           <Text style={styles.statVal}>{state.enabledFeatures.size}</Text>
@@ -70,6 +95,14 @@ const styles = StyleSheet.create({
   name: {...Typography.headlineSmall, fontWeight: '700', marginBottom: Spacing.xs},
   email: {color: Colors.onSurfaceVariant, ...Typography.bodyLarge, marginBottom: Spacing.xs},
   member: {color: Colors.onSurfaceVariant, ...Typography.bodyMedium, marginBottom: Spacing.lg},
+  healthCard: {backgroundColor: '#fff', borderRadius: Radius.md, padding: Spacing.md, width: '100%', marginBottom: Spacing.lg},
+  healthTitle: {color: Colors.onSurface, ...Typography.labelLarge, fontWeight: '700', marginBottom: Spacing.md},
+  healthRow: {flexDirection: 'row', alignItems: 'flex-start', marginBottom: Spacing.md},
+  healthIcon: {fontSize: 20, marginRight: Spacing.md},
+  healthContent: {flex: 1},
+  healthLabel: {color: Colors.onSurfaceVariant, ...Typography.bodySmall, marginBottom: 2},
+  healthValue: {color: Colors.onSurface, ...Typography.labelLarge, fontWeight: '700'},
+  healthDivider: {height: 1, backgroundColor: '#E0E0E0', marginVertical: Spacing.md},
   statsCard: {flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#fff', borderRadius: Radius.md, padding: Spacing.md, width: '100%', marginBottom: Spacing.lg},
   stat: {alignItems: 'center'},
   statVal: {color: Colors.primary, fontSize: 22, fontWeight: '700'},

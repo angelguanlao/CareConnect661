@@ -209,6 +209,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   fullWidth: true,
                   onPressed: _submit,
                 ),
+                const SizedBox(height: 12),
+
+                // ── Sign up button ─────────────────────────────────────────
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 52),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    side: BorderSide(
+                      color: AppTheme.primary,
+                      width: 2,
+                    ),
+                  ),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Sign-up feature coming soon! For now, use any email + password ≥ 6 characters to demo the app.'),
+                        backgroundColor: AppTheme.secondary,
+                        duration: Duration(seconds: 4),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Create Account',
+                    style: theme.textTheme.labelLarge
+                        ?.copyWith(color: AppTheme.primary),
+                  ),
+                ),
                 const SizedBox(height: 20),
 
                 Center(
