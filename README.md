@@ -153,6 +153,14 @@ npm start          # start Metro bundler
 npm run android    # run on Android emulator (separate terminal)
 ```
 
+Required React Native Android dependencies:
+
+- JDK 17-20 (this repo is configured to use JDK 17 for Gradle Android builds)
+- Android SDK Platform 36 + Build-Tools 36.0.0
+- Android NDK 27.1.12297006
+- CMake 3.22.1
+- `adb` and `emulator` available on `PATH`
+
 See [react-native/README.md](react-native/README.md) for full setup, iOS
 instructions, and test/coverage commands.
 

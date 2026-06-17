@@ -13,12 +13,43 @@ notifications, profile, and settings screens.
 
 - Node.js >= 22
 - React Native CLI: `@react-native-community/cli`
+- Java Development Kit (JDK) 17-20 (JDK 25 is not supported by RN Android builds)
 - Android Studio (for Android emulator) or Xcode (for iOS simulator, macOS only)
+- Android SDK components:
+	- Android SDK Platform 36
+	- Android SDK Build-Tools 36.0.0
+	- Android NDK 27.1.12297006
+	- CMake 3.22.1
+
+Install JDK 17 on macOS (Homebrew):
+
+```bash
+brew install openjdk@17
+```
+
+React Native Android in this repo is pinned to JDK 17 via
+`android/gradle.properties`.
 
 Check your environment:
 
 ```bash
 npx react-native doctor
+```
+
+## Android Environment Variables (macOS)
+
+Add Android SDK tools to your shell path:
+
+```bash
+echo '\n# Android SDK\nexport ANDROID_HOME=$HOME/Library/Android/sdk\nexport PATH=$PATH:$ANDROID_HOME/platform-tools\nexport PATH=$PATH:$ANDROID_HOME/emulator' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Verify commands are available:
+
+```bash
+which adb
+which emulator
 ```
 
 ## Setup
@@ -44,6 +75,13 @@ In a separate terminal, run on Android emulator:
 ```bash
 cd react-native
 npm run android
+```
+
+If no emulator is running, start one first:
+
+```bash
+emulator -list-avds
+emulator -avd Pixel_10
 ```
 
 ## Run on iOS (macOS only)
