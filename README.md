@@ -139,6 +139,23 @@ open coverage/html/index.html
 - High-contrast mode and text scaling are user-configurable
 - Left-hand optimization is built into navigation placement and core controls
 
+## React Native Implementation (Week 5)
+
+A parallel React Native implementation lives in `react-native/`. It matches the
+same 9 screens and accessibility features as the Flutter version.
+
+Quick start:
+
+```bash
+cd react-native
+npm install
+npm start          # start Metro bundler
+npm run android    # run on Android emulator (separate terminal)
+```
+
+See [react-native/README.md](react-native/README.md) for full setup, iOS
+instructions, and test/coverage commands.
+
 ## Design Reference
 
 - `plan/CareConnect Accessibility Redesign/`
