@@ -25,6 +25,8 @@ class AppState extends ChangeNotifier {
         name: 'Alex Johnson',
         email: email,
         joinDate: DateTime(2024, 1, 15),
+        bloodGroup: 'B+',
+        allergies: 'Penicillin, seafood',
       );
       _isLoggedIn = true;
       _loadSampleNotifications();

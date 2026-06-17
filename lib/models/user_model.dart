@@ -4,19 +4,25 @@ class UserModel {
   final String name;
   final String email;
   final DateTime joinDate;
+  final String? bloodGroup;
+  final String? allergies;
 
   const UserModel({
     required this.id,
     required this.name,
     required this.email,
     required this.joinDate,
+    this.bloodGroup,
+    this.allergies,
   });
 
-  UserModel copyWith({String? name, String? email}) => UserModel(
+  UserModel copyWith({String? name, String? email, String? bloodGroup, String? allergies}) => UserModel(
         id: id,
         name: name ?? this.name,
         email: email ?? this.email,
         joinDate: joinDate,
+        bloodGroup: bloodGroup ?? this.bloodGroup,
+        allergies: allergies ?? this.allergies,
       );
 
   /// Two-letter initials derived from the user's display name.

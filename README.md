@@ -139,6 +139,31 @@ open coverage/html/index.html
 - High-contrast mode and text scaling are user-configurable
 - Left-hand optimization is built into navigation placement and core controls
 
+## React Native Implementation (Week 5)
+
+A parallel React Native implementation lives in `react-native/`. It matches the
+same 9 screens and accessibility features as the Flutter version.
+
+Quick start:
+
+```bash
+cd react-native
+npm install
+npm start          # start Metro bundler
+npm run android    # run on Android emulator (separate terminal)
+```
+
+Required React Native Android dependencies:
+
+- JDK 17-20 (this repo is configured to use JDK 17 for Gradle Android builds)
+- Android SDK Platform 36 + Build-Tools 36.0.0
+- Android NDK 27.1.12297006
+- CMake 3.22.1
+- `adb` and `emulator` available on `PATH`
+
+See [react-native/README.md](react-native/README.md) for full setup, iOS
+instructions, and test/coverage commands.
+
 ## Design Reference
 
 - `plan/CareConnect Accessibility Redesign/`
