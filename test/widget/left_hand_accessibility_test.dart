@@ -51,7 +51,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Settings'), findsAtLeastNWidgets(1));
 
-    await tester.tap(find.text('High Contrast Mode'));
+    await tester.tap(find.text('High contrast'));
     await tester.pumpAndSettle();
     expect(appState.highContrast, isTrue);
   });

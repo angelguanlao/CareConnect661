@@ -106,20 +106,20 @@ class _PanelToggle extends StatelessWidget {
     return Semantics(
       toggled: value,
       label: title,
-      child: Container(
-        constraints: BoxConstraints(minHeight: minHeight),
-        margin: const EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: SwitchListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          value: value,
-          onChanged: onChanged,
-          secondary: Icon(icon),
-          title: Text(title),
-          subtitle: Text(subtitle),
+      child: Material(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(18),
+        child: Container(
+          constraints: BoxConstraints(minHeight: minHeight),
+          margin: const EdgeInsets.only(bottom: 12),
+          child: SwitchListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            value: value,
+            onChanged: onChanged,
+            secondary: Icon(icon),
+            title: Text(title),
+            subtitle: Text(subtitle),
+          ),
         ),
       ),
     );
