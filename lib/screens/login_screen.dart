@@ -109,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   label: 'Email address text field',
                   textField: true,
                   child: TextFormField(
+                    autofocus: true,
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
