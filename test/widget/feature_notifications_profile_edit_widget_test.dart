@@ -28,7 +28,7 @@ Widget _wrapWithProvider(AppState appState, Widget child) {
 }
 
 void main() {
-  group('Uncovered screens smoke and behavior', () {
+  group('Feature detail, notifications, and profile screens', () {
     testWidgets('Feature detail shows not found for unknown id', (tester) async {
       final appState = AppState();
 
@@ -38,7 +38,7 @@ void main() {
           const FeatureDetailScreen(featureId: 'missing-id'),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.text('Feature not found.'), findsOneWidget);
     });
@@ -53,14 +53,14 @@ void main() {
           const FeatureDetailScreen(featureId: 'left-nav'),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.text('About'), findsOneWidget);
       expect(find.text('How to use'), findsOneWidget);
 
       final wasEnabled = appState.isFeatureEnabled('left-nav');
       await tester.tap(find.byType(ElevatedButton));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 200));
 
       expect(appState.isFeatureEnabled('left-nav'), isNot(wasEnabled));
     });
@@ -71,20 +71,20 @@ void main() {
       await tester.pumpWidget(
         _wrapWithProvider(appState, const FeaturesListScreen()),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.text('Accessibility Features'), findsOneWidget);
 
       await tester.enterText(find.byType(TextField), 'voice');
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
       expect(find.textContaining('Voice'), findsWidgets);
 
       await tester.tap(find.widgetWithText(FilterChip, 'Navigation'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
       expect(find.byType(FilterChip), findsWidgets);
 
       await tester.enterText(find.byType(TextField), 'zzzz-no-match');
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
       expect(find.textContaining('No results for'), findsOneWidget);
     });
 
@@ -94,7 +94,7 @@ void main() {
       await tester.pumpWidget(
         _wrapWithProvider(appState, const NotificationsScreen()),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.text('No notifications yet.'), findsOneWidget);
     });
@@ -107,10 +107,10 @@ void main() {
       await tester.pumpWidget(
         _wrapWithProvider(appState, const NotificationsScreen()),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       await tester.tap(find.text('Mark all read'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
       expect(appState.unreadCount, 0);
 
       appState.logout();
@@ -119,7 +119,7 @@ void main() {
 
       final before = appState.unreadCount;
       await tester.tap(find.text('Accessibility Tip'));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
       expect(appState.unreadCount, lessThan(before));
     });
 
@@ -128,7 +128,7 @@ void main() {
       final appState = AppState();
 
       await tester.pumpWidget(_wrapWithProvider(appState, const ProfileScreen()));
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
@@ -137,7 +137,7 @@ void main() {
       final appState = await _loggedInState();
 
       await tester.pumpWidget(_wrapWithProvider(appState, const ProfileScreen()));
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.text('Profile'), findsOneWidget);
       expect(find.text('Alex Johnson'), findsOneWidget);
@@ -153,7 +153,7 @@ void main() {
       await tester.pumpWidget(
         _wrapWithProvider(appState, const EditProfileScreen()),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Full name'),
@@ -164,7 +164,7 @@ void main() {
         'invalid-email',
       );
       await tester.tap(find.widgetWithText(ElevatedButton, 'Save Changes'));
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.text('Name must be at least 2 characters.'), findsOneWidget);
       expect(find.text('Please enter a valid email address.'), findsOneWidget);
@@ -176,7 +176,7 @@ void main() {
       await tester.pumpWidget(
         _wrapWithProvider(appState, const EditProfileScreen()),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Full name'),
