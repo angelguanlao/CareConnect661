@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
+import '../utils/handedness_layout.dart';
 import '../widgets/accessible_button.dart';
 
 /// Screen 8 — Edit profile form.
@@ -62,12 +63,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final appState = context.watch<AppState>();
+    final formPadding = HandednessLayout.asymmetricPadding(
+      leftHandMode: appState.leftHandMode,
+      outerPadding: 24.0,
+      thumbPadding: 32.0,
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Profile')),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.only(
+            left: formPadding.left,
+            right: formPadding.right,
+            top: 24,
+            bottom: 24,
+          ),
           child: Form(
             key: _formKey,
             child: Column(

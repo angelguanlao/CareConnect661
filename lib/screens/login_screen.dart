@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
+import '../utils/handedness_layout.dart';
 import '../widgets/accessible_button.dart';
 
 /// Screen 1 — Authentication / Login.
@@ -54,11 +55,22 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final appState = context.watch<AppState>();
+    final formPadding = HandednessLayout.asymmetricPadding(
+      leftHandMode: appState.leftHandMode,
+      outerPadding: 24.0,
+      thumbPadding: 32.0,
+    );
 
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: EdgeInsets.only(
+            left: formPadding.left,
+            right: formPadding.right,
+            top: 32,
+            bottom: 32,
+          ),
           child: Form(
             key: _formKey,
             child: Column(
