@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  group('Coverage Expansion Tests', () {
-    testWidgets('Home screen displays quick actions section',
+  group('Authentication and settings widget flows', () {
+    testWidgets('Authenticated home screen shows quick actions and navigation',
         (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
@@ -44,7 +44,7 @@ void main() {
       expect(find.byType(NavigationBar), findsOneWidget);
     });
 
-    testWidgets('AppState manages accessibility settings directly',
+    testWidgets('AppState default accessibility values can be updated directly',
         (WidgetTester tester) async {
       final appState = AppState();
       
@@ -68,7 +68,7 @@ void main() {
       expect(appState.textScaleFactor, 1.2);
     });
 
-    testWidgets('AppState manages accessibility settings',
+    testWidgets('AppState accessibility values can be reset after updates',
         (WidgetTester tester) async {
       final appState = AppState();
       
@@ -92,7 +92,7 @@ void main() {
       expect(appState.textScaleFactor, 1.2);
     });
 
-    testWidgets('Form validation works on login',
+    testWidgets('Login form shows validation on empty submit',
         (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
@@ -111,7 +111,7 @@ void main() {
       expect(find.text('Please enter your email address.'), findsOneWidget);
     });
 
-    testWidgets('Email field autofocus works',
+    testWidgets('Login email field accepts input with autofocus',
         (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
@@ -130,7 +130,7 @@ void main() {
       expect(find.text('test@example.com'), findsOneWidget);
     });
 
-    testWidgets('Handedness layout functions work correctly',
+    testWidgets('AppState handedness flag can be toggled repeatedly',
         (WidgetTester tester) async {
       final appState = AppState();
       
@@ -147,7 +147,7 @@ void main() {
       expect(appState.leftHandMode, isTrue);
     });
 
-    testWidgets('Multiple settings changes work together',
+    testWidgets('Multiple accessibility settings can be updated together',
         (WidgetTester tester) async {
       final appState = AppState();
       
@@ -176,7 +176,7 @@ void main() {
       expect(appState.textScaleFactor, 1.0);
     });
 
-    testWidgets('Theme responds to high contrast setting',
+    testWidgets('High contrast flag updates after authentication flow',
         (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
@@ -217,7 +217,7 @@ void main() {
       expect(appState.highContrast, isTrue);
     });
 
-    testWidgets('Text scale slider range is valid',
+    testWidgets('AppState accepts supported text scale values',
         (WidgetTester tester) async {
       final appState = AppState();
       

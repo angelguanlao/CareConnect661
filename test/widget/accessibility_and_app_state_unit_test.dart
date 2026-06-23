@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Additional Coverage Tests', () {
-    testWidgets('Feature model can be instantiated',
+  group('Feature model and app state accessibility behavior', () {
+    testWidgets('Feature model preserves constructor values',
         (WidgetTester tester) async {
       final feature = FeatureModel(
         id: '1',
@@ -24,7 +24,7 @@ void main() {
       expect(feature.isEnabled, isFalse);
     });
 
-    testWidgets('Feature model copyWith works', (WidgetTester tester) async {
+    testWidgets('Feature model copyWith updates enabled flag', (WidgetTester tester) async {
       final original = FeatureModel(
         id: '1',
         title: 'Test Feature',
@@ -41,7 +41,7 @@ void main() {
       expect(updated.title, 'Test Feature');
     });
 
-    testWidgets('Text scale affects widget sizes', (WidgetTester tester) async {
+    testWidgets('AppState stores text scale changes', (WidgetTester tester) async {
       final appState = AppState();
 
       // Verify initial text scale
@@ -60,7 +60,7 @@ void main() {
       expect(appState.textScaleFactor, 1.0);
     });
 
-    testWidgets('High contrast mode can be toggled', (WidgetTester tester) async {
+    testWidgets('AppState toggles high contrast mode', (WidgetTester tester) async {
       final appState = AppState();
 
       // Verify initial state
@@ -79,7 +79,7 @@ void main() {
       expect(appState.highContrast, isTrue);
     });
 
-    testWidgets('Large targets can be toggled', (WidgetTester tester) async {
+    testWidgets('AppState toggles large touch targets', (WidgetTester tester) async {
       final appState = AppState();
 
       // Verify initial state
@@ -98,7 +98,7 @@ void main() {
       expect(appState.largeTargets, isFalse);
     });
 
-    testWidgets('Left hand mode state management', (WidgetTester tester) async {
+    testWidgets('AppState toggles left-handed mode', (WidgetTester tester) async {
       final appState = AppState();
 
       // Initial state should be left-handed
@@ -119,7 +119,7 @@ void main() {
       expect(appState.leftHandMode, isTrue);
     });
 
-    testWidgets('All accessibility settings together', (WidgetTester tester) async {
+    testWidgets('AppState updates all accessibility settings together', (WidgetTester tester) async {
       final appState = AppState();
 
       // Set all to non-default
@@ -147,7 +147,7 @@ void main() {
       expect(appState.textScaleFactor, 1.0);
     });
 
-    testWidgets('AppState notifications work', (WidgetTester tester) async {
+    testWidgets('AppState notifies listeners when accessibility settings change', (WidgetTester tester) async {
       final appState = AppState();
       int notifyCount = 0;
 
@@ -168,7 +168,7 @@ void main() {
       expect(notifyCount, greaterThan(countBefore));
     });
 
-    testWidgets('Edge case: text scale bounds', (WidgetTester tester) async {
+    testWidgets('AppState accepts text scale boundary values', (WidgetTester tester) async {
       final appState = AppState();
 
       // Test minimum
@@ -193,7 +193,7 @@ void main() {
       expect(appState.textScaleFactor, 1.35);
     });
 
-    testWidgets('Rapid setting changes', (WidgetTester tester) async {
+    testWidgets('AppState remains consistent after rapid accessibility changes', (WidgetTester tester) async {
       final appState = AppState();
 
       // Rapid toggles

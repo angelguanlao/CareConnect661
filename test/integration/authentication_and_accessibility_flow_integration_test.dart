@@ -5,9 +5,9 @@ import 'package:care_connect661/main.dart';
 import 'package:care_connect661/state/app_state.dart';
 
 void main() {
-  group('CareConnect Integration Tests - Left-Handed Accessibility', () {
+  group('Authentication and accessibility integration flows', () {
     
-    testWidgets('Login → Dashboard flow works correctly', (WidgetTester tester) async {
+    testWidgets('Login to dashboard flow works correctly', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -43,7 +43,7 @@ void main() {
       expect(find.byType(BottomNavigationBar), findsOneWidget);
     });
 
-    testWidgets('Email field has autofocus on LoginScreen', (WidgetTester tester) async {
+    testWidgets('Login email field has autofocus', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -62,7 +62,7 @@ void main() {
       expect(find.text('test@example.com'), findsOneWidget);
     });
 
-    testWidgets('Form validation error is announced as live region', (WidgetTester tester) async {
+    testWidgets('Login validation error is announced as a live region', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -80,7 +80,7 @@ void main() {
       expect(find.text('Please enter your email address.'), findsOneWidget);
     });
 
-    testWidgets('Navigation bar labels are semantic', (WidgetTester tester) async {
+    testWidgets('Navigation bar exposes semantic labels', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -104,7 +104,7 @@ void main() {
       expect(navItems, findsWidgets);
     });
 
-    testWidgets('Left-hand mode toggle in Settings', (WidgetTester tester) async {
+    testWidgets('Settings screen exposes the left-handed mode toggle', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -129,7 +129,7 @@ void main() {
       expect(find.text('Left-hand mode'), findsWidgets);
     });
 
-    testWidgets('Quick Actions grid tiles are accessible', (WidgetTester tester) async {
+    testWidgets('Home quick action tiles remain accessible after login', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -153,7 +153,7 @@ void main() {
       expect(find.text('Large Targets'), findsOneWidget);
     });
 
-    testWidgets('Profile screen shows user information', (WidgetTester tester) async {
+    testWidgets('Profile screen shows authenticated user information', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -178,7 +178,7 @@ void main() {
       expect(find.text('Alex Johnson'), findsOneWidget);
     });
 
-    testWidgets('Features list screen is searchable', (WidgetTester tester) async {
+    testWidgets('Features list screen exposes search controls', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -203,7 +203,7 @@ void main() {
       expect(find.byIcon(Icons.search_rounded), findsOneWidget);
     });
 
-    testWidgets('High contrast mode toggle changes theme', (WidgetTester tester) async {
+    testWidgets('High contrast quick action changes the active theme', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -236,7 +236,7 @@ void main() {
       expect(initialBg, isNot(equals(newBg)));
     });
 
-    testWidgets('Form padding adapts to left-hand mode', (WidgetTester tester) async {
+    testWidgets('App bootstraps form layout needed for left-handed padding checks', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -254,7 +254,7 @@ void main() {
       expect(app, isNotNull);
     });
 
-    testWidgets('Profile edit screen has accessible form', (WidgetTester tester) async {
+    testWidgets('Profile edit screen exposes accessible form fields', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -284,7 +284,7 @@ void main() {
       expect(find.text('Email address'), findsOneWidget);
     });
 
-    testWidgets('Logout returns to login screen', (WidgetTester tester) async {
+    testWidgets('Settings flow can return to a logout confirmation state', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(
@@ -310,7 +310,7 @@ void main() {
       expect(find.text('Settings'), findsOneWidget);
     });
 
-    testWidgets('Accessibility panel displays all settings', (WidgetTester tester) async {
+    testWidgets('Accessibility panel displays all expected settings', (WidgetTester tester) async {
       final appState = AppState();
       await tester.pumpWidget(
         ChangeNotifierProvider.value(

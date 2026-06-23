@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  testWidgets('onboarding completion reaches home and shell navigation works',
+  testWidgets('left-handed onboarding completion reaches home and updates shell navigation',
       (tester) async {
     final appState = AppState();
 
