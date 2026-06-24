@@ -12,7 +12,8 @@ name: Settings Accessibility Preferences
 - tapOn: "Next"
 - tapOn: "Get Started"
 - assertVisible: "Quick Actions"
-- tapOn: "Settings"
+- tapOn:
+    point: "92%,95%"
 - assertVisible: "Accessibility"
 - assertVisible: "Left-hand mode"
 - assertVisible: "High contrast"
