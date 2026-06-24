@@ -1,0 +1,17 @@
+appId: com.example.care_connect661
+name: Login to Dashboard
+---
+- launchApp:
+    clearState: true
+- assertVisible: "Welcome back"
+- tapOn: "Email address text field"
+- inputText: "demo@careconnect.com"
+- tapOn: "Password text field"
+- inputText: "123456"
+- tapOn: "Sign In"
+- assertVisible: "Step 1 of 3"
+- tapOn: "Next"
+- tapOn: "Next"
+- tapOn: "Get Started"
+- assertVisible: "Quick Actions"
+- assertVisible: "Tip of the Day"

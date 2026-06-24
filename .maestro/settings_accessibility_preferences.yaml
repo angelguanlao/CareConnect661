@@ -1,0 +1,20 @@
+appId: com.example.care_connect661
+name: Settings Accessibility Preferences
+---
+- launchApp:
+    clearState: true
+- tapOn: "Email address text field"
+- inputText: "demo@careconnect.com"
+- tapOn: "Password text field"
+- inputText: "123456"
+- tapOn: "Sign In"
+- tapOn: "Next"
+- tapOn: "Next"
+- tapOn: "Get Started"
+- assertVisible: "Quick Actions"
+- tapOn: "Settings"
+- assertVisible: "Accessibility"
+- assertVisible: "Left-hand mode"
+- assertVisible: "High contrast"
+- assertVisible: "Larger touch targets"
+- assertVisible: "Text size"
