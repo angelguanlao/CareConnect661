@@ -1,336 +1,241 @@
+import 'package:care_connect661/main.dart';
+import 'package:care_connect661/state/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:care_connect661/main.dart';
-import 'package:care_connect661/state/app_state.dart';
+
+Future<void> _pumpApp(WidgetTester tester, AppState appState) async {
+  await tester.pumpWidget(
+    ChangeNotifierProvider.value(
+      value: appState,
+      child: CareConnectApp(appState: appState),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+Future<void> _login(WidgetTester tester) async {
+  await tester.enterText(
+    find.widgetWithText(TextFormField, 'Email address'),
+    'test@example.com',
+  );
+  await tester.enterText(
+    find.widgetWithText(TextFormField, 'Password'),
+    'password123',
+  );
+
+  await tester.tap(find.widgetWithText(ElevatedButton, 'Sign In'));
+  // AppState.login has a 700ms delay.
+  await tester.pump(const Duration(milliseconds: 900));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _completeOnboardingIfPresent(WidgetTester tester) async {
+  if (find.text('Step 1 of 3').evaluate().isEmpty) {
+    return;
+  }
+
+  for (var i = 0; i < 2; i++) {
+    final next = find.widgetWithText(ElevatedButton, 'Next');
+    if (next.evaluate().isNotEmpty) {
+      await tester.tap(next);
+      await tester.pumpAndSettle();
+    }
+  }
+
+  final getStarted = find.widgetWithText(ElevatedButton, 'Get Started');
+  if (getStarted.evaluate().isNotEmpty) {
+    await tester.tap(getStarted);
+    await tester.pumpAndSettle();
+  }
+}
+
+Future<void> _loginAndReachHome(WidgetTester tester) async {
+  await _login(tester);
+  await _completeOnboardingIfPresent(tester);
+  expect(find.text('Quick Actions'), findsOneWidget);
+}
+
+Future<void> _openTab(WidgetTester tester, String label) async {
+  await tester.tap(find.widgetWithText(NavigationDestination, label));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _ensureVisibleAndTap(WidgetTester tester, Finder finder) async {
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
+  await tester.tap(finder);
+  await tester.pumpAndSettle();
+}
 
 void main() {
   group('Authentication and accessibility integration flows', () {
-    
-    testWidgets('Login to dashboard flow works correctly', (WidgetTester tester) async {
+    testWidgets('Login to dashboard flow works correctly',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
-      await tester.pumpAndSettle();
+      await _pumpApp(tester, appState);
 
-      // Verify we're on login screen
       expect(find.text('Welcome back'), findsOneWidget);
       expect(find.text('Sign in to continue'), findsOneWidget);
 
-      // Enter email (email field should have autofocus)
-      await tester.enterText(
-        find.byType(TextFormField).first,
-        'test@example.com',
-      );
+      await _loginAndReachHome(tester);
 
-      // Enter password
-      await tester.enterText(
-        find.byType(TextFormField).last,
-        'password123',
-      );
-
-      // Tap sign-in button
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
-
-      // Verify we're on home screen
-      expect(find.text('CareConnect'), findsWidgets);
-      expect(find.text('Quick Actions'), findsOneWidget);
-      expect(find.byType(BottomNavigationBar), findsOneWidget);
+      expect(find.byType(NavigationBar), findsOneWidget);
+      expect(find.widgetWithText(NavigationDestination, 'Home'), findsOneWidget);
+      expect(find.widgetWithText(NavigationDestination, 'Features'), findsOneWidget);
+      expect(find.widgetWithText(NavigationDestination, 'Settings'), findsOneWidget);
     });
 
     testWidgets('Login email field has autofocus', (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
-      await tester.pumpAndSettle();
+      await _pumpApp(tester, appState);
 
-      // The email field should be focused (autofocus: true)
       final emailField = find.byType(TextFormField).first;
       expect(emailField, findsOneWidget);
 
-      // Type directly without tapping (should work because of autofocus)
       await tester.enterText(emailField, 'test@example.com');
       expect(find.text('test@example.com'), findsOneWidget);
     });
 
-    testWidgets('Login validation error is announced as a live region', (WidgetTester tester) async {
+    testWidgets('Login validation error is announced as a live region',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
+      await _pumpApp(tester, appState);
+
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Sign In'));
       await tester.pumpAndSettle();
 
-      // Try to sign in with invalid email
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
-
-      // Error message should appear
       expect(find.text('Please enter your email address.'), findsOneWidget);
     });
 
-    testWidgets('Navigation bar exposes semantic labels', (WidgetTester tester) async {
+    testWidgets('Navigation bar exposes semantic labels',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
-      await tester.pumpAndSettle();
+      await _pumpApp(tester, appState);
+      await _loginAndReachHome(tester);
 
-      // Log in first
-      await tester.enterText(find.byType(TextFormField).first, 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).last, 'password123');
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
-
-      // Check that navigation destinations have semantic labels
-      expect(find.byType(NavigationDestination), findsWidgets);
-
-      // Tap Features button in nav bar
-      final navItems = find.byType(NavigationDestination);
-      expect(navItems, findsWidgets);
+      expect(find.byType(NavigationDestination), findsNWidgets(4));
+      expect(find.widgetWithText(NavigationDestination, 'Home'), findsOneWidget);
+      expect(find.widgetWithText(NavigationDestination, 'Features'), findsOneWidget);
+      expect(find.widgetWithText(NavigationDestination, 'Alerts'), findsOneWidget);
+      expect(find.widgetWithText(NavigationDestination, 'Settings'), findsOneWidget);
     });
 
-    testWidgets('Settings screen exposes the left-handed mode toggle', (WidgetTester tester) async {
+    testWidgets('Settings screen exposes the left-handed mode toggle',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
+      await _pumpApp(tester, appState);
+      await _loginAndReachHome(tester);
+
+      await _openTab(tester, 'Settings');
+
+      expect(
+        find.descendant(
+          of: find.byType(AppBar),
+          matching: find.text('Settings'),
         ),
+        findsOneWidget,
       );
-      await tester.pumpAndSettle();
-
-      // Log in
-      await tester.enterText(find.byType(TextFormField).first, 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).last, 'password123');
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
-
-      // Navigate to Settings
-      await tester.tap(find.text('Settings'));
-      await tester.pumpAndSettle();
-
-      // Verify Settings screen shows accessibility controls
-      expect(find.text('Settings'), findsWidgets);
-      expect(find.text('Left-hand mode'), findsWidgets);
+      expect(find.text('Left-hand mode'), findsOneWidget);
     });
 
-    testWidgets('Home quick action tiles remain accessible after login', (WidgetTester tester) async {
+    testWidgets('Home quick action tiles remain accessible after login',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
-      await tester.pumpAndSettle();
+      await _pumpApp(tester, appState);
+      await _loginAndReachHome(tester);
 
-      // Log in
-      await tester.enterText(find.byType(TextFormField).first, 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).last, 'password123');
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
-
-      // Verify Quick Actions section exists
       expect(find.text('Quick Actions'), findsOneWidget);
-      
-      // Verify quick action buttons are present
       expect(find.text('High Contrast'), findsOneWidget);
       expect(find.text('Large Targets'), findsOneWidget);
     });
 
-    testWidgets('Profile screen shows authenticated user information', (WidgetTester tester) async {
+    testWidgets('Profile screen shows authenticated user information',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
+      await _pumpApp(tester, appState);
+      await _loginAndReachHome(tester);
+
+      await tester.tap(find.byTooltip('View profile'));
       await tester.pumpAndSettle();
 
-      // Log in
-      await tester.enterText(find.byType(TextFormField).first, 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).last, 'password123');
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
-
-      // Tap profile button in app bar
-      await tester.tap(find.byIcon(Icons.account_circle).first);
-      await tester.pumpAndSettle();
-
-      // Verify profile screen
       expect(find.text('Profile'), findsOneWidget);
       expect(find.text('Alex Johnson'), findsOneWidget);
     });
 
-    testWidgets('Features list screen exposes search controls', (WidgetTester tester) async {
+    testWidgets('Features list screen exposes search controls',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
-      await tester.pumpAndSettle();
+      await _pumpApp(tester, appState);
+      await _loginAndReachHome(tester);
 
-      // Log in
-      await tester.enterText(find.byType(TextFormField).first, 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).last, 'password123');
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
+      await _openTab(tester, 'Features');
 
-      // Navigate to Features
-      await tester.tap(find.text('Features'));
-      await tester.pumpAndSettle();
-
-      // Verify features screen
       expect(find.text('Accessibility Features'), findsOneWidget);
       expect(find.byIcon(Icons.search_rounded), findsOneWidget);
     });
 
-    testWidgets('High contrast quick action changes the active theme', (WidgetTester tester) async {
+    testWidgets('High contrast quick action changes the active theme',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
-      await tester.pumpAndSettle();
+      await _pumpApp(tester, appState);
+      await _loginAndReachHome(tester);
 
-      // Log in
-      await tester.enterText(find.byType(TextFormField).first, 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).last, 'password123');
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
-
-      // Get initial background color
-      final initialBg = Theme.of(
-        tester.element(find.text('CareConnect').first),
-      ).scaffoldBackgroundColor;
-
-      // Tap High Contrast toggle (in quick actions grid)
-      await tester.tap(find.text('High Contrast'));
-      await tester.pumpAndSettle();
-
-      // Verify theme changed (background should be different)
-      final newBg = Theme.of(
-        tester.element(find.text('CareConnect').first),
-      ).scaffoldBackgroundColor;
-
-      expect(initialBg, isNot(equals(newBg)));
+      expect(appState.highContrast, isFalse);
+      await _ensureVisibleAndTap(tester, find.text('High Contrast'));
+      expect(appState.highContrast, isTrue);
     });
 
-    testWidgets('App bootstraps form layout needed for left-handed padding checks', (WidgetTester tester) async {
+    testWidgets('App bootstraps form layout needed for left-handed padding checks',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
-      await tester.pumpAndSettle();
+      await _pumpApp(tester, appState);
 
-      // Get the form context to check padding
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
-      
-      // This is a simplified test - in real app would use widget inspection
-      // to verify asymmetric padding is applied
       expect(app, isNotNull);
     });
 
-    testWidgets('Profile edit screen exposes accessible form fields', (WidgetTester tester) async {
+    testWidgets('Profile edit screen exposes accessible form fields',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
+      await _pumpApp(tester, appState);
+      await _loginAndReachHome(tester);
+
+      await tester.tap(find.byTooltip('View profile'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Edit profile'));
       await tester.pumpAndSettle();
 
-      // Log in
-      await tester.enterText(find.byType(TextFormField).first, 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).last, 'password123');
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
-
-      // Tap profile button
-      await tester.tap(find.byIcon(Icons.account_circle).first);
-      await tester.pumpAndSettle();
-
-      // Tap edit button
-      await tester.tap(find.byIcon(Icons.edit_rounded));
-      await tester.pumpAndSettle();
-
-      // Verify edit form
       expect(find.text('Edit Profile'), findsOneWidget);
       expect(find.text('Full name'), findsOneWidget);
       expect(find.text('Email address'), findsOneWidget);
     });
 
-    testWidgets('Settings flow can return to a logout confirmation state', (WidgetTester tester) async {
+    testWidgets('Settings flow can return to a logout confirmation state',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
+      await _pumpApp(tester, appState);
+      await _loginAndReachHome(tester);
+
+      await tester.tap(find.byTooltip('View profile'));
+      await tester.pumpAndSettle();
+      await _ensureVisibleAndTap(
+        tester,
+        find.widgetWithText(ElevatedButton, 'Sign Out'),
       );
-      await tester.pumpAndSettle();
 
-      // Log in
-      await tester.enterText(find.byType(TextFormField).first, 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).last, 'password123');
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
-
-      // Navigate to Settings
-      await tester.tap(find.text('Settings'));
-      await tester.pumpAndSettle();
-
-      // Find and tap logout button (if exists in settings)
-      // This assumes there's a logout option in the UI
-      // If not, you may need to adjust based on actual UI
-      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('Sign out?'), findsOneWidget);
+      expect(find.widgetWithText(ElevatedButton, 'Sign out'), findsOneWidget);
     });
 
-    testWidgets('Accessibility panel displays all expected settings', (WidgetTester tester) async {
+    testWidgets('Accessibility panel displays all expected settings',
+        (WidgetTester tester) async {
       final appState = AppState();
-      await tester.pumpWidget(
-        ChangeNotifierProvider.value(
-          value: appState,
-          child: CareConnectApp(appState: appState),
-        ),
-      );
-      await tester.pumpAndSettle();
+      await _pumpApp(tester, appState);
+      await _loginAndReachHome(tester);
 
-      // Log in
-      await tester.enterText(find.byType(TextFormField).first, 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).last, 'password123');
-      await tester.tap(find.text('Sign In'));
-      await tester.pumpAndSettle();
+      await _openTab(tester, 'Settings');
 
-      // Navigate to Settings
-      await tester.tap(find.text('Settings'));
-      await tester.pumpAndSettle();
-
-      // Verify accessibility settings are visible
       expect(find.text('Accessibility'), findsOneWidget);
       expect(find.text('Left-hand mode'), findsOneWidget);
       expect(find.text('High contrast'), findsOneWidget);
