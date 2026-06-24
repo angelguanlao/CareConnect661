@@ -1,0 +1,18 @@
+appId: com.example.care_connect661
+name: Dashboard to Profile
+---
+- launchApp:
+    clearState: true
+- tapOn: "Email address text field"
+- inputText: "demo@careconnect.com"
+- tapOn: "Password text field"
+- inputText: "123456"
+- tapOn: "Sign In"
+- tapOn: "Next"
+- tapOn: "Next"
+- tapOn: "Get Started"
+- assertVisible: "Quick Actions"
+- tapOn: "View profile"
+- assertVisible: "Profile"
+- assertVisible: "Alex Johnson"
+- assertVisible: "Edit Profile"

@@ -54,7 +54,6 @@ class MainShell extends StatelessWidget {
           NavigationDestination(
             icon: Semantics(
               label: 'Home',
-              excludeSemantics: true,
               child: const Icon(Icons.home_outlined),
             ),
             selectedIcon: const Icon(Icons.home_rounded),
@@ -64,7 +63,6 @@ class MainShell extends StatelessWidget {
           NavigationDestination(
             icon: Semantics(
               label: 'Features',
-              excludeSemantics: true,
               child: const Icon(Icons.accessibility_outlined),
             ),
             selectedIcon: const Icon(Icons.accessibility_new_rounded),
@@ -76,7 +74,6 @@ class MainShell extends StatelessWidget {
               label: unread > 0
                   ? 'Notifications, $unread unread'
                   : 'Notifications',
-              excludeSemantics: true,
               child: Badge(
                 isLabelVisible: unread > 0,
                 label: Text('$unread'),
@@ -94,7 +91,6 @@ class MainShell extends StatelessWidget {
           NavigationDestination(
             icon: Semantics(
               label: 'Settings',
-              excludeSemantics: true,
               child: const Icon(Icons.settings_outlined),
             ),
             selectedIcon: const Icon(Icons.settings_rounded),

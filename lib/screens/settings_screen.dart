@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
+import '../state/accessibility_settings.dart';
 import '../theme/app_theme.dart';
 import '../utils/routes.dart';
+import '../widgets/accessibility_panel.dart';
 
 /// Screen 9 — Settings.
 ///
@@ -16,130 +18,18 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
+    
+    // Create an adapter that provides AccessibilitySettings interface
+    // while delegating to AppState methods
+    final accessibilityAdapter = _AccessibilitySettingsAdapter(appState, context);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // ── Accessibility ──────────────────────────────────────────────
-          const _SectionHeader(label: 'Accessibility'),
-          const SizedBox(height: 8),
-          Card(
-            child: Column(
-              children: [
-                _SwitchRow(
-                  icon: Icons.swap_horiz_rounded,
-                  title: 'Left-Hand Mode',
-                  subtitle: 'Positions controls on the left edge.',
-                  value: appState.leftHandMode,
-                  semanticLabel: appState.leftHandMode
-                      ? 'Left-hand mode is on'
-                      : 'Left-hand mode is off',
-                  onChanged: (v) =>
-                      context.read<AppState>().setLeftHandMode(v),
-                ),
-                const Divider(height: 1, indent: 56),
-                _SwitchRow(
-                  icon: Icons.contrast_rounded,
-                  title: 'High Contrast Mode',
-                  subtitle: 'Dark theme with ≥7:1 contrast ratios.',
-                  value: appState.highContrast,
-                  semanticLabel: appState.highContrast
-                      ? 'High contrast mode is on'
-                      : 'High contrast mode is off',
-                  onChanged: (v) =>
-                      context.read<AppState>().setHighContrast(v),
-                ),
-                const Divider(height: 1, indent: 56),
-                _SwitchRow(
-                  icon: Icons.touch_app_rounded,
-                  title: 'Large Touch Targets',
-                  subtitle: 'Expands tap areas to 60×60 dp.',
-                  value: appState.largeTargets,
-                  semanticLabel: appState.largeTargets
-                      ? 'Large touch targets are on'
-                      : 'Large touch targets are off',
-                  onChanged: (v) =>
-                      context.read<AppState>().setLargeTargets(v),
-                ),
-                const Divider(height: 1, indent: 56),
-                // Text scale slider
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 12),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.text_fields_rounded,
-                          color: AppTheme.primary, size: 26),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Text Size',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15)),
-                                Text(
-                                  '${appState.textScaleFactor.toStringAsFixed(1)}×',
-                                  style: const TextStyle(
-                                      color: AppTheme.primary,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Semantics(
-                              label:
-                                  'Text scale, current value ${appState.textScaleFactor.toStringAsFixed(1)}',
-                              slider: true,
-                              child: Slider(
-                                value: appState.textScaleFactor,
-                                min: 0.8,
-                                max: 2.0,
-                                divisions: 12,
-                                onChanged: (v) => context
-                                    .read<AppState>()
-                                    .setTextScaleFactor(v),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Small',
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        color: AppTheme.textSecondary)),
-                                Semantics(
-                                  label: 'Reset text size to default',
-                                  button: true,
-                                  child: TextButton(
-                                    onPressed: () => context
-                                        .read<AppState>()
-                                        .setTextScaleFactor(1.0),
-                                    child: const Text('Reset'),
-                                  ),
-                                ),
-                                const Text('Large',
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        color: AppTheme.textSecondary)),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // ── Accessibility Panel ────────────────────────────────────────
+          AccessibilityPanel(settings: accessibilityAdapter),
           const SizedBox(height: 24),
 
           // ── Account ────────────────────────────────────────────────────
@@ -194,6 +84,51 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
+/// Adapter class that provides AccessibilitySettings interface
+/// while delegating to AppState methods for state management.
+class _AccessibilitySettingsAdapter extends AccessibilitySettings {
+  final AppState _appState;
+  final BuildContext _context;
+
+  _AccessibilitySettingsAdapter(this._appState, this._context);
+
+  @override
+  bool get leftHandMode => _appState.leftHandMode;
+
+  @override
+  bool get highContrast => _appState.highContrast;
+
+  @override
+  bool get largerTouchTargets => _appState.largeTargets;
+
+  // Clamp textScale to AccessibilityPanel's expected range (1.0-1.4)
+  @override
+  double get textScale {
+    final scale = _appState.textScaleFactor;
+    return scale.clamp(1.0, 1.4);
+  }
+
+  @override
+  void toggleLeftHandMode(bool value) {
+    _context.read<AppState>().setLeftHandMode(value);
+  }
+
+  @override
+  void toggleHighContrast(bool value) {
+    _context.read<AppState>().setHighContrast(value);
+  }
+
+  @override
+  void toggleLargerTouchTargets(bool value) {
+    _context.read<AppState>().setLargeTargets(value);
+  }
+
+  @override
+  void setTextScale(double value) {
+    _context.read<AppState>().setTextScaleFactor(value);
+  }
+}
+
 // ── Helper widgets ────────────────────────────────────────────────────────────
 
 class _SectionHeader extends StatelessWidget {
@@ -211,45 +146,6 @@ class _SectionHeader extends StatelessWidget {
             fontWeight: FontWeight.w700,
             color: AppTheme.textSecondary,
             letterSpacing: 1.2),
-      ),
-    );
-  }
-}
-
-class _SwitchRow extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final bool value;
-  final String semanticLabel;
-  final ValueChanged<bool> onChanged;
-
-  const _SwitchRow({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.value,
-    required this.semanticLabel,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      label: semanticLabel,
-      toggled: value,
-      child: SwitchListTile(
-        secondary: Icon(icon, color: AppTheme.primary, size: 26),
-        title: Text(title,
-            style: const TextStyle(
-                fontWeight: FontWeight.w600, fontSize: 15)),
-        subtitle: Text(subtitle,
-            style: const TextStyle(
-                fontSize: 13, color: AppTheme.textSecondary)),
-        value: value,
-        onChanged: onChanged,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       ),
     );
   }

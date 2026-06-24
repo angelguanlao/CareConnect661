@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/feature_model.dart';
 import '../state/app_state.dart';
 import '../theme/app_theme.dart';
+import '../utils/handedness_layout.dart';
 import '../utils/routes.dart';
 
 /// Screen 3 — Home / Dashboard.
@@ -279,6 +280,9 @@ class _QuickTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppState>();
+    final startAlignment = HandednessLayout.primaryButtonAlignment(appState.leftHandMode);
+    
     return Semantics(
       button: true,
       label: label,
@@ -295,7 +299,9 @@ class _QuickTile extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: startAlignment == Alignment.centerLeft
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Icon(icon,

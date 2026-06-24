@@ -105,6 +105,28 @@ Run all tests:
 flutter test
 ```
 
+Run integration tests:
+
+```bash
+flutter test test/integration -r expanded
+```
+
+Run E2E tests (Maestro):
+
+```bash
+# Install Maestro CLI once
+curl -Ls https://get.maestro.mobile.dev | bash
+
+# Run all E2E flows
+bash scripts/run_maestro_e2e.sh
+```
+
+Available E2E flows:
+
+- .maestro/login_to_dashboard.yaml
+- .maestro/dashboard_to_profile.yaml
+- .maestro/settings_accessibility_preferences.yaml
+
 Run analyzer:
 
 ```bash

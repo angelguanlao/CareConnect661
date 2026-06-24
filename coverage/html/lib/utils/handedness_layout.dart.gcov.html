@@ -31,13 +31,13 @@
             <td class="headerValue">lcov.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">56.2&nbsp;%</td>
+            <td class="headerCovTableEntryMed">81.2&nbsp;%</td>
             <td class="headerCovTableEntry">16</td>
-            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntry">13</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-06-09 18:56:22</td>
+            <td class="headerValue">2026-06-23 19:18:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -75,7 +75,7 @@
 <span id="L13"><span class="lineNum">      13</span>              : </span>
 <span id="L14"><span class="lineNum">      14</span>              :   /// Returns the horizontal [Alignment] for primary action buttons.</span>
 <span id="L15"><span class="lineNum">      15</span>              :   /// Left-hand mode → [Alignment.centerLeft]; right-hand → [Alignment.centerRight].</span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           1 :   static Alignment primaryButtonAlignment(bool leftHandMode) =&gt;</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC">           4 :   static Alignment primaryButtonAlignment(bool leftHandMode) =&gt;</span></span>
 <span id="L17"><span class="lineNum">      17</span>              :       leftHandMode ? Alignment.centerLeft : Alignment.centerRight;</span>
 <span id="L18"><span class="lineNum">      18</span>              : </span>
 <span id="L19"><span class="lineNum">      19</span>              :   /// Returns the [FloatingActionButtonLocation] that keeps the FAB within</span>
@@ -87,7 +87,7 @@
 <span id="L25"><span class="lineNum">      25</span>              : </span>
 <span id="L26"><span class="lineNum">      26</span>              :   /// Returns the [MainAxisAlignment] that places primary content on the</span>
 <span id="L27"><span class="lineNum">      27</span>              :   /// preferred-hand side of a [Row].</span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaUNC">           0 :   static MainAxisAlignment rowAlignment(bool leftHandMode) =&gt;</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           1 :   static MainAxisAlignment rowAlignment(bool leftHandMode) =&gt;</span></span>
 <span id="L29"><span class="lineNum">      29</span>              :       leftHandMode ? MainAxisAlignment.start : MainAxisAlignment.end;</span>
 <span id="L30"><span class="lineNum">      30</span>              : </span>
 <span id="L31"><span class="lineNum">      31</span>              :   // ── Padding helpers ────────────────────────────────────────────────────────</span>
@@ -97,12 +97,12 @@
 <span id="L35"><span class="lineNum">      35</span>              :   ///</span>
 <span id="L36"><span class="lineNum">      36</span>              :   /// [outerPadding] is the standard padding on the non-dominant side.</span>
 <span id="L37"><span class="lineNum">      37</span>              :   /// [thumbPadding] is the extra padding added on the dominant side.</span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaUNC">           0 :   static EdgeInsets asymmetricPadding({</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">           5 :   static EdgeInsets asymmetricPadding({</span></span>
 <span id="L39"><span class="lineNum">      39</span>              :     bool leftHandMode = true,</span>
 <span id="L40"><span class="lineNum">      40</span>              :     double outerPadding = 16.0,</span>
 <span id="L41"><span class="lineNum">      41</span>              :     double thumbPadding = 24.0,</span>
 <span id="L42"><span class="lineNum">      42</span>              :   }) {</span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaUNC">           0 :     return EdgeInsets.only(</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">           5 :     return EdgeInsets.only(</span></span>
 <span id="L44"><span class="lineNum">      44</span>              :       left:  leftHandMode ? thumbPadding : outerPadding,</span>
 <span id="L45"><span class="lineNum">      45</span>              :       right: leftHandMode ? outerPadding : thumbPadding,</span>
 <span id="L46"><span class="lineNum">      46</span>              :     );</span>
@@ -116,20 +116,20 @@
 <span id="L54"><span class="lineNum">      54</span>              :   ///</span>
 <span id="L55"><span class="lineNum">      55</span>              :   /// Comfortable zone is defined as the inner 60 % of the screen on the</span>
 <span id="L56"><span class="lineNum">      56</span>              :   /// dominant side (0.0–0.6 for left hand, 0.4–1.0 for right hand).</span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">           1 :   static bool isInComfortZone(double xFraction, {required bool leftHandMode}) {</span></span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">           3 :     assert(xFraction &gt;= 0.0 &amp;&amp; xFraction &lt;= 1.0);</span></span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">           1 :     return leftHandMode ? xFraction &lt;= 0.6 : xFraction &gt;= 0.4;</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">           2 :   static bool isInComfortZone(double xFraction, {required bool leftHandMode}) {</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">           6 :     assert(xFraction &gt;= 0.0 &amp;&amp; xFraction &lt;= 1.0);</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">           2 :     return leftHandMode ? xFraction &lt;= 0.6 : xFraction &gt;= 0.4;</span></span>
 <span id="L60"><span class="lineNum">      60</span>              :   }</span>
 <span id="L61"><span class="lineNum">      61</span>              : </span>
 <span id="L62"><span class="lineNum">      62</span>              :   /// Categorises a horizontal position into a reachability level.</span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">           1 :   static ReachabilityZone zoneFor(</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">           2 :   static ReachabilityZone zoneFor(</span></span>
 <span id="L64"><span class="lineNum">      64</span>              :     double xFraction, {</span>
 <span id="L65"><span class="lineNum">      65</span>              :     required bool leftHandMode,</span>
 <span id="L66"><span class="lineNum">      66</span>              :   }) {</span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">           3 :     assert(xFraction &gt;= 0.0 &amp;&amp; xFraction &lt;= 1.0);</span></span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaUNC">           0 :     final pos = leftHandMode ? xFraction : 1.0 - xFraction;</span></span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">           1 :     if (pos &lt;= 0.45) return ReachabilityZone.easy;</span></span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">           1 :     if (pos &lt;= 0.70) return ReachabilityZone.stretch;</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">           6 :     assert(xFraction &gt;= 0.0 &amp;&amp; xFraction &lt;= 1.0);</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">           1 :     final pos = leftHandMode ? xFraction : 1.0 - xFraction;</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">           2 :     if (pos &lt;= 0.45) return ReachabilityZone.easy;</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">           2 :     if (pos &lt;= 0.70) return ReachabilityZone.stretch;</span></span>
 <span id="L71"><span class="lineNum">      71</span>              :     return ReachabilityZone.avoid;</span>
 <span id="L72"><span class="lineNum">      72</span>              :   }</span>
 <span id="L73"><span class="lineNum">      73</span>              : </span>
