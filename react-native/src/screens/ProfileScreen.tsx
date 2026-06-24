@@ -20,8 +20,8 @@ export function ProfileScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.avatar} accessibilityLabel={`Profile avatar, initials ${initials}`}>
-        <Text style={styles.avatarText}>{initials}</Text>
+      <View style={styles.avatar} accessible accessibilityLabel={`Profile avatar, initials ${initials}`}>
+        <Text style={styles.avatarText} importantForAccessibility="no">{initials}</Text>
       </View>
       <Text style={styles.name}>{user?.name}</Text>
       <Text style={styles.email}>{user?.email}</Text>
@@ -31,8 +31,8 @@ export function ProfileScreen() {
         <View style={styles.healthCard}>
           <Text style={styles.healthTitle}>Health Information</Text>
           {user?.bloodGroup && (
-            <View style={styles.healthRow}>
-              <Text style={styles.healthIcon}>🩸</Text>
+            <View style={styles.healthRow} accessible accessibilityLabel={`Blood Group: ${user.bloodGroup}`}>
+              <Text style={styles.healthIcon} importantForAccessibility="no">🩸</Text>
               <View style={styles.healthContent}>
                 <Text style={styles.healthLabel}>Blood Group</Text>
                 <Text style={styles.healthValue}>{user.bloodGroup}</Text>
@@ -41,8 +41,8 @@ export function ProfileScreen() {
           )}
           {user?.bloodGroup && user?.allergies && <View style={styles.healthDivider} />}
           {user?.allergies && (
-            <View style={styles.healthRow}>
-              <Text style={styles.healthIcon}>⚠️</Text>
+            <View style={styles.healthRow} accessible accessibilityLabel={`Allergies: ${user.allergies}`}>
+              <Text style={styles.healthIcon} importantForAccessibility="no">⚠️</Text>
               <View style={styles.healthContent}>
                 <Text style={styles.healthLabel}>Allergies</Text>
                 <Text style={styles.healthValue}>{user.allergies}</Text>
@@ -53,17 +53,17 @@ export function ProfileScreen() {
       )}
 
       <View style={styles.statsCard}>
-        <View style={styles.stat} accessibilityLabel={`Features Active: ${state.enabledFeatures.size}`}>
-          <Text style={styles.statVal}>{state.enabledFeatures.size}</Text>
-          <Text style={styles.statLbl}>Features{'\n'}Active</Text>
+        <View style={styles.stat} accessible accessibilityLabel={`Features Active: ${state.enabledFeatures.size}`}>
+          <Text style={styles.statVal} importantForAccessibility="no">{state.enabledFeatures.size}</Text>
+          <Text style={styles.statLbl} importantForAccessibility="no">Features{'\n'}Active</Text>
         </View>
-        <View style={styles.stat} accessibilityLabel={`Hand Mode: ${state.leftHandMode ? 'Left' : 'Right'}`}>
-          <Text style={styles.statVal}>{state.leftHandMode ? 'Left' : 'Right'}</Text>
-          <Text style={styles.statLbl}>Hand{'\n'}Mode</Text>
+        <View style={styles.stat} accessible accessibilityLabel={`Hand Mode: ${state.leftHandMode ? 'Left' : 'Right'}`}>
+          <Text style={styles.statVal} importantForAccessibility="no">{state.leftHandMode ? 'Left' : 'Right'}</Text>
+          <Text style={styles.statLbl} importantForAccessibility="no">Hand{'\n'}Mode</Text>
         </View>
-        <View style={styles.stat} accessibilityLabel={`Text Scale: ${state.textScaleFactor.toFixed(1)}×`}>
-          <Text style={styles.statVal}>{state.textScaleFactor.toFixed(1)}×</Text>
-          <Text style={styles.statLbl}>Text{'\n'}Scale</Text>
+        <View style={styles.stat} accessible accessibilityLabel={`Text Scale: ${state.textScaleFactor.toFixed(1)}×`}>
+          <Text style={styles.statVal} importantForAccessibility="no">{state.textScaleFactor.toFixed(1)}×</Text>
+          <Text style={styles.statLbl} importantForAccessibility="no">Text{'\n'}Scale</Text>
         </View>
       </View>
 

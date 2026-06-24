@@ -14,8 +14,8 @@ export function OnboardingScreen() {
 
   const pages = [
     <View key="hand" style={styles.page}>
-      <Text style={styles.emoji}>🤚</Text>
-      <Text style={styles.pageTitle}>Which hand do you mainly use?</Text>
+      <Text style={styles.emoji} importantForAccessibility="no" accessibilityElementsHidden>🤚</Text>
+      <Text style={styles.pageTitle} accessibilityRole="header">Which hand do you mainly use?</Text>
       <Text style={styles.pageSubtitle}>CareConnect positions controls for easier reach.</Text>
       <TouchableOpacity
         style={[styles.choiceCard, leftHand && styles.choiceSelected]}
@@ -39,8 +39,8 @@ export function OnboardingScreen() {
       </TouchableOpacity>
     </View>,
     <View key="visual" style={styles.page}>
-      <Text style={styles.emoji}>👁</Text>
-      <Text style={styles.pageTitle}>Visual preferences</Text>
+      <Text style={styles.emoji} importantForAccessibility="no" accessibilityElementsHidden>👁</Text>
+      <Text style={styles.pageTitle} accessibilityRole="header">Visual preferences</Text>
       <View style={styles.switchRow}>
         <Text style={styles.switchLabel}>High Contrast</Text>
         <Switch
@@ -66,8 +66,8 @@ export function OnboardingScreen() {
       </View>
     </View>,
     <View key="motor" style={styles.page}>
-      <Text style={styles.emoji}>👆</Text>
-      <Text style={styles.pageTitle}>Motor preferences</Text>
+      <Text style={styles.emoji} importantForAccessibility="no" accessibilityElementsHidden>👆</Text>
+      <Text style={styles.pageTitle} accessibilityRole="header">Motor preferences</Text>
       <View style={styles.switchRow}>
         <Text style={styles.switchLabel}>Large Touch Targets</Text>
         <Switch
@@ -82,9 +82,9 @@ export function OnboardingScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.progressRow} accessibilityLabel={`Step ${page + 1} of ${pages.length}`}>
+      <View style={styles.progressRow} accessible accessibilityLabel={`Progress: step ${page + 1} of ${pages.length}`}>
         {pages.map((_, i) => (
-          <View key={i} style={[styles.dot, i <= page && styles.dotActive]} />
+          <View key={i} style={[styles.dot, i <= page && styles.dotActive]} importantForAccessibility="no" />
         ))}
       </View>
       <Text style={styles.step}>Step {page + 1} of {pages.length}</Text>

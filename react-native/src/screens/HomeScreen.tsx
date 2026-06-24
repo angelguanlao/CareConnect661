@@ -19,10 +19,13 @@ export function HomeScreen() {
     <ScrollView
       contentContainerStyle={styles.container}
       testID="home-scroll">
-      <View style={styles.banner}>
-        <Text style={styles.bannerSub}>{salutation},</Text>
-        <Text style={styles.bannerName}>{user?.name.split(' ')[0] ?? 'there'}</Text>
-        <Text style={styles.bannerNote}>Your accessibility settings are active.</Text>
+      <View
+        style={styles.banner}
+        accessible
+        accessibilityLabel={`${salutation}, ${user?.name.split(' ')[0] ?? 'there'}. Your accessibility settings are active.`}>
+        <Text style={styles.bannerSub} importantForAccessibility="no">{salutation},</Text>
+        <Text style={styles.bannerName} importantForAccessibility="no">{user?.name.split(' ')[0] ?? 'there'}</Text>
+        <Text style={styles.bannerNote} importantForAccessibility="no">Your accessibility settings are active.</Text>
       </View>
 
       <Text style={styles.sectionTitle} accessibilityRole="header">Your Accessibility Profile</Text>
@@ -32,11 +35,11 @@ export function HomeScreen() {
           {value: `${total - enabled}`, label: 'Available', color: Colors.secondary},
           {value: state.leftHandMode ? 'Left' : 'Right', label: 'Hand Mode', color: '#F57C00'},
         ].map(s => (
-          <View key={s.label} style={styles.statPill} accessibilityLabel={`${s.label}: ${s.value}`}>
-            <View style={[styles.statBox, {backgroundColor: s.color + '22'}]}>
-              <Text style={[styles.statValue, {color: s.color}]}>{s.value}</Text>
+          <View key={s.label} style={styles.statPill} accessible accessibilityLabel={`${s.label}: ${s.value}`}>
+            <View style={[styles.statBox, {backgroundColor: s.color + '22'}]} importantForAccessibility="no-hide-descendants">
+              <Text style={[styles.statValue, {color: Colors.onSurface}]}>{s.value}</Text>
             </View>
-            <Text style={styles.statLabel}>{s.label}</Text>
+            <Text style={styles.statLabel} importantForAccessibility="no">{s.label}</Text>
           </View>
         ))}
       </View>
@@ -74,9 +77,9 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   container: {padding: Spacing.md, paddingBottom: Spacing.xl},
   banner: {borderRadius: Radius.lg, padding: Spacing.lg, marginBottom: Spacing.md, backgroundColor: Colors.primary},
-  bannerSub: {color: 'rgba(255,255,255,0.75)', ...Typography.bodyLarge},
+  bannerSub: {color: '#FFFFFF', ...Typography.bodyLarge},
   bannerName: {color: '#fff', ...Typography.displaySmall, fontWeight: '700'},
-  bannerNote: {color: 'rgba(255,255,255,0.75)', ...Typography.bodyMedium},
+  bannerNote: {color: '#FFFFFF', ...Typography.bodyMedium},
   sectionTitle: {...Typography.titleMedium, fontWeight: '700', marginBottom: Spacing.sm, marginTop: Spacing.md},
   statsRow: {flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#fff', borderRadius: Radius.md, padding: Spacing.md, marginBottom: Spacing.md},
   statPill: {alignItems: 'center'},
@@ -89,6 +92,6 @@ const styles = StyleSheet.create({
   tileLabel: {color: Colors.onSurface, ...Typography.titleSmall},
   tileLabelActive: {color: '#fff'},
   tip: {backgroundColor: Colors.primaryContainer, borderRadius: Radius.md, padding: Spacing.md},
-  tipTitle: {color: Colors.primary, fontWeight: '700', marginBottom: Spacing.xs},
+  tipTitle: {color: Colors.onPrimaryContainer, fontWeight: '700', marginBottom: Spacing.xs},
   tipBody: {color: Colors.onSurface, ...Typography.bodyMedium},
 });

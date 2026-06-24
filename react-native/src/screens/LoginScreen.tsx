@@ -24,11 +24,11 @@ export function LoginScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-      <View accessible accessibilityRole="header" style={styles.header}>
-        <View style={styles.logoBox} accessibilityLabel="CareConnect logo">
-          <Text style={styles.logoIcon}>♿</Text>
+      <View style={styles.header}>
+        <View style={styles.logoBox} accessible accessibilityLabel="CareConnect logo" accessibilityRole="image">
+          <Text style={styles.logoIcon} importantForAccessibility="no" accessibilityElementsHidden>♿</Text>
         </View>
-        <Text style={styles.brand}>CareConnect</Text>
+        <Text style={styles.brand} accessibilityRole="header">CareConnect</Text>
       </View>
 
       <Text style={styles.welcome}>Welcome back</Text>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   passwordRow: {flexDirection: 'row', alignItems: 'center', marginBottom: Spacing.md},
   visibilityBtn: {padding: Spacing.md, minWidth: MIN_TOUCH, minHeight: MIN_TOUCH, justifyContent: 'center', alignItems: 'center'},
   errorBox: {backgroundColor: Colors.errorContainer, borderRadius: Radius.sm, padding: Spacing.md, marginBottom: Spacing.md},
-  errorText: {color: Colors.error, ...Typography.bodyMedium},
+  errorText: {color: '#C62828', ...Typography.bodyMedium},
   button: {backgroundColor: Colors.primary, borderRadius: Radius.md, padding: Spacing.md, alignItems: 'center', minHeight: MIN_TOUCH, marginBottom: Spacing.md},
   buttonText: {color: '#fff', ...Typography.titleMedium},
   signupBtn: {borderWidth: 2, borderColor: Colors.primary, borderRadius: Radius.md, padding: Spacing.md, alignItems: 'center', minHeight: MIN_TOUCH, marginBottom: Spacing.md},

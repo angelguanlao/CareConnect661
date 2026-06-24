@@ -1,0 +1,24 @@
+# Negative-path E2E: an invalid login keeps the user on the login screen with an
+# error. Mirrors the Flutter integration test's "invalid login" case so both
+# platforms cover the same scenario.
+#
+# Run:  maestro test .maestro/invalid_login.yaml
+appId: com.careconnectrn
+---
+- launchApp:
+    clearState: true
+- assertVisible: "Welcome back"
+- tapOn:
+    id: "email-input"
+- inputText: "demo@careconnect.com"
+- tapOn:
+    id: "password-input"
+- inputText: "123"            # too short — login requires 6+ characters
+- hideKeyboard
+- tapOn:
+    id: "sign-in-button"
+
+# The error banner appears and the user stays on the login screen.
+- assertVisible:
+    id: "error-message"
+- assertVisible: "Welcome back"

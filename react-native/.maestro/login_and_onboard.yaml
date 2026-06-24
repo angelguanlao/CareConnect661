@@ -1,0 +1,43 @@
+# Core E2E: Login → 3-step Accessibility Onboarding → Home dashboard.
+# Reusable building block — other flows `runFlow: login_and_onboard.yaml`.
+#
+# Run:  maestro test .maestro/login_and_onboard.yaml
+# Requires the app installed on a running device/emulator (and Metro running
+# for the debug build). See README "Integration & E2E tests".
+appId: com.careconnectrn
+---
+- launchApp:
+    clearState: true
+
+# ── Login ──────────────────────────────────────────────────────────────
+- assertVisible: "Welcome back"
+- tapOn:
+    id: "email-input"
+- inputText: "demo@careconnect.com"
+- tapOn:
+    id: "password-input"
+- inputText: "123456"
+- hideKeyboard
+- tapOn:
+    id: "sign-in-button"
+
+# ── Onboarding step 1: handedness ──────────────────────────────────────
+- assertVisible: "Which hand do you mainly use?"
+- tapOn:
+    id: "left-hand-option"
+- tapOn:
+    id: "next-button"
+
+# ── Onboarding step 2: visual ──────────────────────────────────────────
+- assertVisible: "Visual preferences"
+- tapOn:
+    id: "next-button"
+
+# ── Onboarding step 3: motor ───────────────────────────────────────────
+- assertVisible: "Motor preferences"
+- tapOn:
+    id: "next-button"
+
+# ── Home dashboard reached ─────────────────────────────────────────────
+- assertVisible: "Your Accessibility Profile"
+- assertVisible: "Quick Actions"
