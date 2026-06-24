@@ -38,6 +38,7 @@ export function FeaturesScreen() {
               style={[styles.chip, sel && styles.chipSelected]}
               onPress={() => setCategory(c === 'All' ? null : c)}
               accessibilityLabel={`${c} filter`}
+              accessibilityRole="button"
               accessibilityState={{selected: sel}}>
               <Text style={sel ? styles.chipTextSelected : styles.chipText}>{c}</Text>
             </TouchableOpacity>
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
   cardTitle: {...Typography.titleMedium, marginBottom: Spacing.xs},
   cardDesc: {color: Colors.onSurfaceVariant, ...Typography.bodyMedium},
   badge: {marginTop: Spacing.xs, backgroundColor: Colors.primaryContainer, borderRadius: Radius.sm, paddingHorizontal: Spacing.sm, paddingVertical: 2, alignSelf: 'flex-start'},
-  badgeText: {color: Colors.primary, ...Typography.labelLarge, fontSize: 11},
+  badgeText: {color: Colors.onPrimaryContainer, ...Typography.labelLarge, fontSize: 11},
   onBadge: {color: 'green', fontWeight: '700', marginLeft: Spacing.sm},
   empty: {flex: 1, justifyContent: 'center', alignItems: 'center', padding: Spacing.xl},
   emptyText: {color: Colors.onSurfaceVariant, ...Typography.bodyLarge},

@@ -51,11 +51,11 @@ export function FeatureDetailScreen() {
 
       <Text style={styles.sectionTitle} accessibilityRole="header">How to use</Text>
       {feature.steps.map((step, i) => (
-        <View key={i} style={styles.step} accessibilityLabel={`Step ${i + 1}: ${step}`}>
-          <View style={styles.stepNum}>
+        <View key={i} style={styles.step} accessible accessibilityLabel={`Step ${i + 1}: ${step}`}>
+          <View style={styles.stepNum} importantForAccessibility="no-hide-descendants">
             <Text style={styles.stepNumText}>{i + 1}</Text>
           </View>
-          <Text style={styles.stepText}>{step}</Text>
+          <Text style={styles.stepText} importantForAccessibility="no">{step}</Text>
         </View>
       ))}
     </ScrollView>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   center: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   hero: {flexDirection: 'row', alignItems: 'flex-start', marginBottom: Spacing.lg},
   badge: {backgroundColor: Colors.primaryContainer, borderRadius: Radius.sm, paddingHorizontal: Spacing.sm, paddingVertical: 4, alignSelf: 'flex-start', marginBottom: Spacing.xs},
-  badgeText: {color: Colors.primary, fontWeight: '700', fontSize: 12},
+  badgeText: {color: Colors.onPrimaryContainer, fontWeight: '700', fontSize: 12},
   statusText: {fontWeight: '600', ...Typography.bodyMedium},
   toggleBtn: {borderRadius: Radius.md, padding: Spacing.md, alignItems: 'center', minHeight: MIN_TOUCH, marginBottom: Spacing.lg},
   toggleText: {color: '#fff', ...Typography.titleMedium},

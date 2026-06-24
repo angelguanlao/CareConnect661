@@ -154,6 +154,33 @@ genhtml coverage/lcov.info -o coverage/html
 open coverage/html/index.html
 ```
 
+## Integration & E2E Tests
+
+The Flutter app has three test layers. Unit and widget tests live in `test/` and run
+on the host with `flutter test`. The end-to-end integration test lives in
+`integration_test/app_test.dart` and runs the real app on a device or emulator.
+
+Run the unit and widget tests:
+
+```bash
+flutter test
+```
+
+Run the end-to-end integration test on a connected device or emulator:
+
+```bash
+flutter devices
+flutter test integration_test/app_test.dart -d <deviceId>
+```
+
+The integration test drives the full primary journey from login through the
+three-step accessibility onboarding to the home dashboard, and it verifies that an
+invalid login keeps the user on the login screen with an error.
+
+The React Native app covers the same layers. Its component-integration tests run with
+`npm test`, and its end-to-end flows run with Maestro. See
+[react-native/README.md](react-native/README.md) for the React Native test commands.
+
 ## Accessibility Notes
 
 - Semantic labels are applied throughout interactive UI controls

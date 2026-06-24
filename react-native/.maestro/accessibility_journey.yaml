@@ -1,0 +1,32 @@
+# Deeper E2E: reach Home, change accessibility settings, enable a feature,
+# and sign out — exercising the cross-screen flow end to end.
+#
+# Run:  maestro test .maestro/accessibility_journey.yaml
+appId: com.careconnectrn
+---
+# Reuse the login + onboarding flow to get to Home.
+- runFlow: login_and_onboard.yaml
+
+# ── Settings: toggle accessibility preferences ─────────────────────────
+- tapOn: "Settings"
+- assertVisible: "ACCESSIBILITY"
+- tapOn:
+    id: "high-contrast-toggle"
+- tapOn:
+    id: "large-targets-toggle"
+- tapOn:
+    id: "scale-1.5"
+
+# ── Features: open a feature and enable it ─────────────────────────────
+- tapOn: "Features"
+- assertVisible: "Left-Hand Navigation"
+- tapOn:
+    id: "feature-left-nav"
+- assertVisible: "How to use"
+- tapOn:
+    id: "toggle-feature"
+- assertVisible: "Disable Feature"   # toggled on → button now offers to disable
+
+# ── Back to Home, confirm we're still navigable ────────────────────────
+- tapOn: "Home"
+- assertVisible: "Quick Actions"

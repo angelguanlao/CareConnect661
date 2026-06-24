@@ -117,6 +117,74 @@ cd react-native
 npm test -- --coverage
 ```
 
+Coverage is configured in [jest.config.js](jest.config.js) (`collectCoverageFrom`,
+`lcov`/`text`/`html` reporters → `coverage/`).
+
+## Test Layers
+
+| Layer | Location | Tooling | What it covers |
+|-------|----------|---------|----------------|
+| Unit | `__tests__/AppState.test.ts`, `__tests__/Feature.test.ts` | Jest | store logic, models |
+| Integration (component) | `__tests__/*Screen*.test.tsx` | Jest + `@testing-library/react-native` | full screens rendered with the real provider + navigation, user interactions |
+| E2E | `.maestro/*.yaml` | Maestro | the app driven on a device across screens |
+
+### Integration / component tests
+
+These render whole screens against the real `AppProvider` and exercise user flows
+(login validation, onboarding selection, feature search/toggle, settings). They run
+on the host with no device:
+
+```bash
+cd react-native
+npm test
+```
+
+### E2E tests (Maestro)
+
+End-to-end flows live in [`.maestro/`](.maestro/):
+
+- `login_and_onboard.yaml` — Login → 3-step onboarding → Home (reusable).
+- `accessibility_journey.yaml` — reaches Home, changes accessibility settings,
+  enables a feature, returns Home.
+
+**Prerequisites:** the app must be **installed on a running device/emulator**, and
+for a debug build **Metro must be running** (`npm start`). Install Maestro once:
+
+```bash
+# macOS / Linux
+curl -fsSL "https://get.maestro.mobile.dev" | bash
+# Windows (PowerShell) — install via WSL, or download from the Maestro releases page
+```
+
+Run the flows:
+
+```bash
+cd react-native
+maestro test .maestro/login_and_onboard.yaml
+maestro test .maestro                       # run every flow in the folder
+```
+
+## Windows Build Notes (gotchas)
+
+The RN 0.86 New Architecture build can fail on Windows for two unrelated reasons —
+both machine-level, neither requires editing the repo:
+
+1. **JDK pinned to a non-Windows path.** `android/gradle.properties` may pin
+   `org.gradle.java.home` to a macOS path. Override it in your **user-level**
+   `~/.gradle/gradle.properties` (not committed) with a JDK 17–21 install, e.g.:
+   ```properties
+   org.gradle.java.home=C:/Program Files/Android/Android Studio/jbr
+   ```
+   (Setting `JAVA_HOME` alone is **not** enough — the project file's value overrides it.)
+
+2. **`ninja: Filename longer than 260 characters`** during the C++ codegen build.
+   Windows long paths must be enabled *and* a modern ninja used — the NDK's bundled
+   ninja 1.10.2 predates long-path support. Enable long paths
+   (`LongPathsEnabled = 1`, already default on many systems) and replace
+   `%ANDROID_HOME%\cmake\3.22.1\bin\ninja.exe` with **ninja ≥ 1.11**
+   ([download](https://github.com/ninja-build/ninja/releases)), then clear
+   `android/app/.cxx` and rebuild.
+
 ## Architecture Choices
 
 - State management: Custom `AppStore` (pub/sub) + React Context via `AppProvider`

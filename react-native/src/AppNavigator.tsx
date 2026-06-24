@@ -54,10 +54,10 @@ function MainTabs() {
     <Tab.Navigator
       screenOptions={{tabBarActiveTintColor: Colors.primary}}
       initialRouteName="HomeTab">
-      <Tab.Screen name="HomeTab" component={HomeScreen} options={{title: 'Home', tabBarLabel: 'Home', tabBarIcon: () => <Text>🏠</Text>}} />
-      <Tab.Screen name="FeaturesTab" component={FeaturesStack} options={{title: 'Features', headerShown: false, tabBarLabel: 'Features', tabBarIcon: () => <Text>♿</Text>}} />
-      <Tab.Screen name="AlertsTab" component={NotificationsScreen} options={{title: 'Alerts', tabBarLabel: 'Alerts', tabBarBadge: unread > 0 ? unread : undefined, tabBarIcon: () => <Text>🔔</Text>}} />
-      <Tab.Screen name="SettingsTab" component={SettingsStack} options={{title: 'Settings', headerShown: false, tabBarLabel: 'Settings', tabBarIcon: () => <Text>⚙️</Text>}} />
+      <Tab.Screen name="HomeTab" component={HomeScreen} options={{title: 'Home', tabBarLabel: 'Home', tabBarAccessibilityLabel: 'Home tab', tabBarIcon: () => <Text importantForAccessibility="no" accessibilityElementsHidden>🏠</Text>}} />
+      <Tab.Screen name="FeaturesTab" component={FeaturesStack} options={{title: 'Features', headerShown: false, tabBarLabel: 'Features', tabBarAccessibilityLabel: 'Features tab', tabBarIcon: () => <Text importantForAccessibility="no" accessibilityElementsHidden>♿</Text>}} />
+      <Tab.Screen name="AlertsTab" component={NotificationsScreen} options={{title: 'Alerts', tabBarLabel: 'Alerts', tabBarAccessibilityLabel: unread > 0 ? `Alerts tab, ${unread} unread` : 'Alerts tab', tabBarBadge: unread > 0 ? unread : undefined, tabBarIcon: () => <Text importantForAccessibility="no" accessibilityElementsHidden>🔔</Text>}} />
+      <Tab.Screen name="SettingsTab" component={SettingsStack} options={{title: 'Settings', headerShown: false, tabBarLabel: 'Settings', tabBarAccessibilityLabel: 'Settings tab', tabBarIcon: () => <Text importantForAccessibility="no" accessibilityElementsHidden>⚙️</Text>}} />
     </Tab.Navigator>
   );
 }
